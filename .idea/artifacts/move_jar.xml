@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact name="move jar">
+    <output-path>$PROJECT_DIR$/../testServer/plugins</output-path>
+    <root id="root">
+      <element id="artifact" artifact-name="duelsCombo:jar" />
+    </root>
+  </artifact>
+</component>

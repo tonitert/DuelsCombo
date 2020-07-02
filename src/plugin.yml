@@ -1,0 +1,6 @@
+name: DuelsCombo
+version: 1.0
+author: tonero
+main: com.tonero.duelsCombo.DuelsCombo
+api-version: 1.8.8-R0.1-SNAPSHOT
+depend: [Duels]

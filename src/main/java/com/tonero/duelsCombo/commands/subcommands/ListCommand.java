@@ -20,11 +20,11 @@ public class ListCommand extends Command {
     @Override
     public void execute(CommandSender sender, String label, String[] args) {
         try{
-            DuelsCombo.getLang().sendTo(sender, DuelsCombo.getLang().getKitsHeader(), false);
-            for (Map.Entry<String, KitData> e: DuelsCombo.getSaveDataManager().getKits().entrySet()) {
-                DuelsCombo.getLang().sendTo(sender, String.format(DuelsCombo.getLang().getKitFormat(), e.getKey(), e.getValue().isCombo(), e.getValue().getMaxNoDamageTicks()), false);
+            DuelsCombo.getInstance().getLang().sendTo(sender, DuelsCombo.getInstance().getLang().getKitsHeader(), false);
+            for (Map.Entry<String, KitData> e: DuelsCombo.getInstance().getSaveDataManager().getKits().entrySet()) {
+                DuelsCombo.getInstance().getLang().sendTo(sender, String.format(DuelsCombo.getInstance().getLang().getKitFormat(), e.getKey(), e.getValue().isCombo(), e.getValue().getMaxNoDamageTicks()), false);
             }
-            DuelsCombo.getLang().sendTo(sender, DuelsCombo.getLang().getKitsFooter(), false);
+            DuelsCombo.getInstance().getLang().sendTo(sender, DuelsCombo.getInstance().getLang().getKitsFooter(), false);
         }
         catch(Exception ex){
             plugin.getLang().sendTo(sender, plugin.getLang().getExceptionWhileRunningCommand(), true);

@@ -51,7 +51,7 @@ public class KitData {
         if(createFile){
             this.configPath = configPath;
             if(Files.exists(Paths.get(configPath))){
-                loadKitData(configPath, DuelsCombo.getDuelsAPI().getKitManager());
+                loadKitData(configPath, DuelsCombo.getInstance().getDuelsAPI().getKitManager());
             }else{
                 this.yamlData = new YamlConfiguration();
                 yamlData.set("name", kitName);
@@ -62,7 +62,7 @@ public class KitData {
         }else{
             this.configPath = configPath;
             if(Files.exists(Paths.get(configPath))){
-                loadKitData(configPath, DuelsCombo.getDuelsAPI().getKitManager());
+                loadKitData(configPath, DuelsCombo.getInstance().getDuelsAPI().getKitManager());
             }else{
                 this.exists = false;
             }

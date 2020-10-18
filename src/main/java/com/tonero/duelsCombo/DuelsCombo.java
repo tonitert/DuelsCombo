@@ -11,13 +11,15 @@ public class DuelsCombo extends JavaPlugin {
     @Getter
     private static DuelsCombo instance;
     @Getter
-    private static Duels duelsAPI = null;
+    private Duels duelsAPI = null;
     @Getter
-    private static Lang lang;
+    private Lang lang;
     @Getter
-    private static SaveDataManager saveDataManager;
+    private SaveDataManager saveDataManager;
     @Getter
-    private static MatchStartManager matchStartManager;
+    private MatchStartManager matchStartManager;
+    @Getter
+    private boolean active = false;
 
     @Override
     public void onEnable(){
@@ -26,13 +28,17 @@ public class DuelsCombo extends JavaPlugin {
         lang = new Lang();
         duelsAPI = (Duels) Bukkit.getServer().getPluginManager().getPlugin("Duels");
         saveDataManager = new SaveDataManager(getDataFolder());
-        matchStartManager = new MatchStartManager();
-        duelsAPI.registerSubCommand("duels", new Commands(this,duelsAPI));
-
-
+        if(matchStartManager == null){
+            matchStartManager = new MatchStartManager();
+            duelsAPI.registerSubCommand("duels", new Commands(this,duelsAPI));
+        }
+        active = true;
     }
     @Override
     public void onDisable(){
+        saveDataManager = null;
+        lang = null;
+        active = false;
 
     }
 

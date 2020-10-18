@@ -8,26 +8,27 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import java.util.*;
-import java.util.logging.Level;
+import java.util.HashMap;
 
 public class MatchStartManager implements Listener {
-    class PlayerData {
+    static class PlayerData {
         public Player p;
-        public int prevMaxNoDamageTicks;
+        public int previousMaxNoDamageTicks;
 
         public PlayerData(Player p) {
             this.p = p;
-            this.prevMaxNoDamageTicks = p.getMaximumNoDamageTicks();
+            this.previousMaxNoDamageTicks = p.getMaximumNoDamageTicks();
         }
     }
     private HashMap<Match, PlayerData[]> matches = new HashMap<>();
     public MatchStartManager(){
-        DuelsCombo.getDuelsAPI().registerListener(this);
+        DuelsCombo.getInstance().getDuelsAPI().registerListener(this);
     }
+
     @EventHandler
     void onMatchStart(MatchStartEvent event){
-        KitData kit = DuelsCombo.getSaveDataManager().getKit(event.getMatch().getKit().getName());
+        if(!DuelsCombo.getInstance().isActive()) return;
+        KitData kit = DuelsCombo.getInstance().getSaveDataManager().getKit(event.getMatch().getKit().getName());
         if(kit == null) return;
         if(kit.isCombo()){
             matches.put(event.getMatch(), new PlayerData[]{new PlayerData(event.getPlayers()[0]), new PlayerData(event.getPlayers()[1])});
@@ -38,16 +39,15 @@ public class MatchStartManager implements Listener {
     }
     @EventHandler
     void onMatchEnd(MatchEndEvent event){
-        KitData kit = DuelsCombo.getSaveDataManager().getKit(event.getMatch().getKit().getName());
+        KitData kit = DuelsCombo.getInstance().getSaveDataManager().getKit(event.getMatch().getKit().getName());
         if(kit == null) return;
         if(kit.isCombo()){
             PlayerData[] players = matches.remove(event.getMatch());
             if(players == null){
-                DuelsCombo.getInstance().getLogger().log(Level.SEVERE, "Warning: PlayerData was null. MaxNoDamageTicks left at match setting.");
                 return;
             }
             for (PlayerData data: players) {
-                data.p.setMaximumNoDamageTicks(data.prevMaxNoDamageTicks);
+                data.p.setMaximumNoDamageTicks(data.previousMaxNoDamageTicks);
             }
         }
     }

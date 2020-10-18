@@ -28,12 +28,17 @@ public class SetOptionsCommand extends Command {
                 plugin.getLang().sendTo(sender, plugin.getLang().getInvalidKit(), true);
                 return;
             }
-            boolean isComboDuel = Boolean.parseBoolean(args[3]);
-            if(kitData == null){
+            boolean isComboDuel;
+
+            try{
+                isComboDuel = Boolean.parseBoolean(args[3]);
+            }
+            catch(Exception e){
                 plugin.getLang().sendTo(sender, plugin.getLang().getUsageFormat() + super.getUsage(), true);
                 return;
             }
-            int noDamageTicks = 1;
+
+            int noDamageTicks;
             try{
                 noDamageTicks = Integer.parseInt(args[4]);
             }

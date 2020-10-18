@@ -5,6 +5,7 @@ import me.realized.duels.api.kit.Kit;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class SaveDataManager {
     private HashMap<String, KitData> kits = new HashMap<>();
@@ -17,7 +18,7 @@ public class SaveDataManager {
         if(kitData != null){
             return kitData;
         }
-        Kit kit = DuelsCombo.getDuelsAPI().getKitManager().get(name);
+        Kit kit = DuelsCombo.getInstance().getDuelsAPI().getKitManager().get(name);
         if(kit == null){
             return null;
         }
@@ -25,9 +26,11 @@ public class SaveDataManager {
         kits.put(name, kitData);
         return kitData;
     }
+
     public HashMap<String, KitData> getKits(){
-        return new HashMap<String, KitData> (kits);
+        return kits;
     }
+
     File dataFolder;
     private String kitsFolderPath;
 
@@ -43,10 +46,10 @@ public class SaveDataManager {
             return;
         }
         String[] contents = kitsFolder.list();
-        for (String path: contents) {
+        for (String path: Objects.requireNonNull(contents)) {
             if(path.endsWith(".yml")){
                 KitData kitData = new KitData(kitsFolderPath + path, path.substring(0,path.lastIndexOf(".")), false);
-                if(kitData.getKitName() != null && kitData.isExists() != false){
+                if(kitData.getKitName() != null && kitData.isExists()){
                     kits.put(kitData.getKitName(), kitData);
                 }
             }

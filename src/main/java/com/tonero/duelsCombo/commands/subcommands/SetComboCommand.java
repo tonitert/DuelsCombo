@@ -8,18 +8,18 @@ import org.bukkit.command.CommandSender;
 
 import java.util.logging.Level;
 
-public class SetOptionsCommand extends Command {
+public class SetComboCommand extends Command {
     Duels duelsAPI;
     DuelsCombo plugin;
-    public SetOptionsCommand(final DuelsCombo plugin, final Duels api){
-        super(plugin, api, "set", "set [kit] [comboDuel:true|false] [noDamageTicks]", plugin.getLang().getSetOptionsDesc(),5, false);
+    public SetComboCommand(final DuelsCombo plugin, final Duels api){
+        super(plugin, api, "setcombo", "setCombo [kit] [comboDuel:true|false] [noDamageTicks] [knockbackMultiplier] [bowKnockbackMultiplier]", plugin.getLang().getSetOptionsDesc(),5, false);
         this.duelsAPI = api;
         this.plugin = plugin;
     }
     @Override
     public void execute(CommandSender sender, String label, String[] args) {
         try{
-            if(args.length != 5){
+            if(args.length < 5){
                 plugin.getLang().sendTo(sender, plugin.getLang().getUsageFormat() + super.getUsage(), true);
                 return;
             }
@@ -49,6 +49,26 @@ public class SetOptionsCommand extends Command {
             if(noDamageTicks < 0){
                 plugin.getLang().sendTo(sender, plugin.getLang().getInvalidNoDamageTicks(), true);
                 return;
+            }
+            if(args.length >= 6){
+                try{
+                    double kbAmount = Double.parseDouble(args[5]);
+                    kitData.setKnockbackMultiplier(kbAmount);
+                }
+                catch(Exception e){
+                    plugin.getLang().sendTo(sender, plugin.getLang().getUsageFormat() + super.getUsage(), true);
+                    return;
+                }
+            }
+            if(args.length >= 7){
+                try{
+                    double kbAmount = Double.parseDouble(args[6]);
+                    kitData.setBowKnockbackMultiplier(kbAmount);
+                }
+                catch(Exception e){
+                    plugin.getLang().sendTo(sender, plugin.getLang().getUsageFormat() + super.getUsage(), true);
+                    return;
+                }
             }
             kitData.setMaxNoDamageTicks(noDamageTicks);
             kitData.setCombo(isComboDuel);

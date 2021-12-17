@@ -3,7 +3,7 @@ package com.tonero.duelsCombo.commands;
 import com.tonero.duelsCombo.DuelsCombo;
 import com.tonero.duelsCombo.Lang;
 import com.tonero.duelsCombo.commands.subcommands.ListCommand;
-import com.tonero.duelsCombo.commands.subcommands.SetOptionsCommand;
+import com.tonero.duelsCombo.commands.subcommands.SetComboCommand;
 import me.realized.duels.api.Duels;
 import me.realized.duels.api.command.SubCommand;
 import org.bukkit.command.CommandSender;
@@ -15,17 +15,19 @@ import java.util.Map;
 
 //TODO replace passing of DuelsAPI references and plugin references to the static methods in the DuelsCombo class
 public class Commands extends SubCommand {
+
     private final Map<String, Command> subCommands = new HashMap<>();
     private Lang lang;
     private DuelsCombo duelsCombo;
     private Duels duelsAPI;
+
     public Commands(DuelsCombo plugin, Duels api){
         super("combo", null, null, "duels.admin", false, 1, "c");
         duelsCombo = plugin;
         lang = duelsCombo.getLang();
         duelsAPI = api;
         register(
-                new SetOptionsCommand(duelsCombo, duelsAPI),
+                new SetComboCommand(duelsCombo, duelsAPI),
                 new ListCommand(duelsCombo, duelsAPI)
         );
 

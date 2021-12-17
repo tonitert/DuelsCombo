@@ -17,6 +17,8 @@ public class Lang {
     @Getter
     private String setOptionsDesc = "Asettaa kitin asetukset.";
     @Getter
+    private String createItemDesc = "Luo esineen annetuilla tiedoilla. playerBowKnockback: Pelaajalle annettava knockback nuolta kohti.";
+    @Getter
     private String setOptionsSuccess = "Asetettu.";
     @Getter
     private String invalidKit = "Tuota kittiä ei ole olemassa.";

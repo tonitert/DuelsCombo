@@ -7,11 +7,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="duelsCombo" />
+        <module name="DuelsCombo" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="duelsCombo" target="1.8" />
+      <module name="DuelsCombo" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

@@ -7,35 +7,37 @@ import org.bukkit.command.CommandSender;
 
 public class Lang {
     @Getter
-    private String helpHeader = "&7--------------- &9Komennot:&7 ---------------";
+    private final String helpHeader = "&7--------------- &9Komennot:&7 ---------------";
     @Getter
-    private String helpFooter = "-----------------------------------------";
+    private final String helpFooter = "-----------------------------------------";
     @Getter
-    private String usageFormat = "Usage:";
+    private final String usageFormat = "Usage:";
     @Getter
-    private String playerOnly = "Vain pelaaja voi suorittaa tämän komennon.";
+    private final String playerOnly = "Vain pelaaja voi suorittaa tämän komennon.";
     @Getter
-    private String setOptionsDesc = "Asettaa kitin asetukset.";
+    private final String setOptionsDesc = "Asettaa kitin asetukset.";
     @Getter
-    private String createItemDesc = "Luo esineen annetuilla tiedoilla. playerBowKnockback: Pelaajalle annettava knockback nuolta kohti.";
+    private final String setItemStatsDesc = "Asettaa kädessä olevan esineen asetukset.";
     @Getter
-    private String setOptionsSuccess = "Asetettu.";
+    private final String createItemDesc = "Luo esineen annetuilla tiedoilla. playerBowKnockback: Pelaajalle annettava knockback nuolta kohti.";
     @Getter
-    private String invalidKit = "Tuota kittiä ei ole olemassa.";
+    private final String setOptionsSuccess = "Asetettu.";
     @Getter
-    private String invalidNoDamageTicks = "Argumentin noDamageTicks on oltava vähintään 0";
+    private final String invalidKit = "Tuota kittiä ei ole olemassa.";
     @Getter
-    private String exceptionWhileRunningCommand = "Komentoa suoritattaessa tapahtui virhe.";
+    private final String invalidNoDamageTicks = "Argumentin noDamageTicks on oltava vähintään 0.";
     @Getter
-    private String kitsHeader = "&7--------------- &9Kitit:&7 ---------------";
+    private final String exceptionWhileRunningCommand = "Komentoa suoritettaessa tapahtui virhe.";
     @Getter
-    private String kitFormat = "&7Kit: %s Combo: %b MaxNoDamageTicks: %o";
+    private final String kitsHeader = "&7--------------- &9Kitit:&7 ---------------";
     @Getter
-    private String kitsFooter = "&7-------------------------------------";
+    private final String kitFormat = "&7Kit: %s Combo: %b MaxNoDamageTicks: %o";
     @Getter
-    private String onlyInGameCommand = "Tämä komento toimii vain pelaajan kutsumana.";
+    private final String kitsFooter = "&7-------------------------------------";
     @Getter
-    private String noItemInHand = "Sinulla täytyy olla esine kädessä.";
+    private final String onlyInGameCommand = "Tämä komento toimii vain pelaajan kutsumana.";
+    @Getter
+    private final String noItemInHand = "Sinulla täytyy olla esine kädessä.";
 
 
     public static String color(final String s) {
@@ -43,7 +45,7 @@ public class Lang {
     }
 
     public String format(String message, boolean prefix){
-        return color((prefix ? "&9[Duels] &7" : "") + message);
+        return color((prefix ? "&9[DuelsCombo] &7" : "") + message);
     }
 
     public void sendTo(CommandSender sender, String string, boolean prefix){

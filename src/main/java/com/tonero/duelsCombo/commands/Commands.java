@@ -13,14 +13,13 @@ import org.bukkit.entity.Player;
 import java.util.HashMap;
 import java.util.Map;
 
-
 //TODO replace passing of DuelsAPI references and plugin references to the static methods in the DuelsCombo class
 public class Commands extends SubCommand {
 
     private final Map<String, Command> subCommands = new HashMap<>();
-    private Lang lang;
-    private DuelsCombo duelsCombo;
-    private Duels duelsAPI;
+    private final Lang lang;
+    private final DuelsCombo duelsCombo;
+    private final Duels duelsAPI;
 
     public Commands(DuelsCombo plugin, Duels api){
         super("combo", null, null, "duels.admin", false, 1, "c");
@@ -40,7 +39,7 @@ public class Commands extends SubCommand {
         }
     }
     @Override
-    public void execute(final CommandSender sender, final String label, final String[] args){
+    public void execute(final CommandSender sender, final String label, final String[] args) {
         if(args.length == getLength()){
             lang.sendTo(sender, lang.getHelpHeader(), false);
             subCommands.values().forEach(command -> lang.sendTo(sender, label + " " + args[0] + " " + command.getUsage() + "\n" + command.getDescription(), false));

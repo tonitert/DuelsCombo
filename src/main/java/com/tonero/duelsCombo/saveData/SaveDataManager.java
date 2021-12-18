@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Objects;
 
 public class SaveDataManager {
-    private HashMap<String, KitData> kits = new HashMap<>();
+    private final HashMap<String, KitData> kits = new HashMap<>();
     /**
      * @param name Kit name
      * @return Returns a KitData object if the specified kit exists.
@@ -31,8 +31,8 @@ public class SaveDataManager {
         return kits;
     }
 
-    File dataFolder;
-    private String kitsFolderPath;
+    private final File dataFolder;
+    private final String kitsFolderPath;
 
     public SaveDataManager(File dataFolder){
         this.dataFolder = dataFolder;

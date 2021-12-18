@@ -4,6 +4,7 @@ import com.tonero.duelsCombo.DuelsCombo;
 import com.tonero.duelsCombo.Lang;
 import com.tonero.duelsCombo.commands.subcommands.ListCommand;
 import com.tonero.duelsCombo.commands.subcommands.SetComboCommand;
+import com.tonero.duelsCombo.commands.subcommands.SetItemStatsCommand;
 import me.realized.duels.api.Duels;
 import me.realized.duels.api.command.SubCommand;
 import org.bukkit.command.CommandSender;
@@ -28,7 +29,8 @@ public class Commands extends SubCommand {
         duelsAPI = api;
         register(
                 new SetComboCommand(duelsCombo, duelsAPI),
-                new ListCommand(duelsCombo, duelsAPI)
+                new ListCommand(duelsCombo, duelsAPI),
+                new SetItemStatsCommand(duelsCombo, duelsAPI)
         );
 
     }

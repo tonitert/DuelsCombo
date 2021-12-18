@@ -21,6 +21,8 @@ public class DuelsCombo extends JavaPlugin {
     @Getter
     private MatchStartManager matchStartManager;
     @Getter
+    private OnDamageListener onDamageListener;
+    @Getter
     private boolean active = false;
     @Getter
     private ProtocolManager protocolManager;
@@ -33,6 +35,7 @@ public class DuelsCombo extends JavaPlugin {
         saveDataManager = new SaveDataManager(getDataFolder());
         if(matchStartManager == null){
             matchStartManager = new MatchStartManager();
+            onDamageListener = new OnDamageListener();
             duelsAPI.registerSubCommand("duels", new Commands(this,duelsAPI));
         }
         active = true;

@@ -32,6 +32,10 @@ public class Lang {
     private String kitFormat = "&7Kit: %s Combo: %b MaxNoDamageTicks: %o";
     @Getter
     private String kitsFooter = "&7-------------------------------------";
+    @Getter
+    private String onlyInGameCommand = "Tämä komento toimii vain pelaajan kutsumana.";
+    @Getter
+    private String noItemInHand = "Sinulla täytyy olla esine kädessä.";
 
 
     public static String color(final String s) {
@@ -41,7 +45,12 @@ public class Lang {
     public String format(String message, boolean prefix){
         return color((prefix ? "&9[Duels] &7" : "") + message);
     }
+
     public void sendTo(CommandSender sender, String string, boolean prefix){
         sender.sendMessage(format(string, prefix));
+    }
+
+    public void sendTo(CommandSender sender, String string){
+        sendTo(sender, string, true);
     }
 }

@@ -38,6 +38,14 @@ public class Lang {
     private final String onlyInGameCommand = "Tämä komento toimii vain pelaajan kutsumana.";
     @Getter
     private final String noItemInHand = "Sinulla täytyy olla esine kädessä.";
+    @Getter
+    private final String invalidFlag = "Tuota flagia ei löytynyt.";
+    @Getter
+    private final String flagsHeader = "&7--------------- &9Flagit:&7 ---------------";
+    @Getter
+    private final String flagFormat = "&7Flag: %s Tyyppi: %s";
+    @Getter
+    private final String flagsFooter = "&7-------------------------------------";
 
 
     public static String color(final String s) {

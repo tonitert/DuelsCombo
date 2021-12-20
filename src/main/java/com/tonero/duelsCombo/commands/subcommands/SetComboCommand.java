@@ -12,7 +12,7 @@ public class SetComboCommand extends Command {
     Duels duelsAPI;
     DuelsCombo plugin;
     public SetComboCommand(final DuelsCombo plugin, final Duels api){
-        super(plugin, api, "setcombo", "setCombo [kit] [comboDuel:true|false] [noDamageTicks] [knockbackMultiplier] [bowKnockbackMultiplier]", plugin.getLang().getSetOptionsDesc(),5, false);
+        super(plugin, api, "setcombo", "setcombo [kit] [comboDuel:true|false] [noDamageTicks] [knockbackMultiplier] [bowKnockbackMultiplier] [maxKnockbackSpeedMultiplier] [knockbackYMultiplier]", plugin.getLang().getSetOptionsDesc(),5, false);
         this.duelsAPI = api;
         this.plugin = plugin;
     }
@@ -64,6 +64,26 @@ public class SetComboCommand extends Command {
                 try{
                     double kbAmount = Double.parseDouble(args[6]);
                     kitData.setBowKnockbackMultiplier(kbAmount);
+                }
+                catch(Exception e){
+                    plugin.getLang().sendTo(sender, plugin.getLang().getUsageFormat() + super.getUsage(), true);
+                    return;
+                }
+            }
+            if(args.length >= 8){
+                try{
+                    double maxKbAmount = Double.parseDouble(args[7]);
+                    kitData.setMaxKnockbackSpeedMultiplier(maxKbAmount);
+                }
+                catch(Exception e){
+                    plugin.getLang().sendTo(sender, plugin.getLang().getUsageFormat() + super.getUsage(), true);
+                    return;
+                }
+            }
+            if(args.length >= 9){
+                try{
+                    double yKb = Double.parseDouble(args[8]);
+                    kitData.setYKnockbackAmount(yKb);
                 }
                 catch(Exception e){
                     plugin.getLang().sendTo(sender, plugin.getLang().getUsageFormat() + super.getUsage(), true);

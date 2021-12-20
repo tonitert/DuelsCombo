@@ -47,6 +47,14 @@ public class KitData {
     private double bowKnockbackMultiplier = 1;
 
     @Getter
+    @Setter
+    private double maxKnockbackSpeedMultiplier = knockbackMultiplier*4;
+
+    @Getter
+    @Setter
+    private double yKnockbackAmount = 0.3;
+
+    @Getter
     private int maxNoDamageTicks;
     public void setMaxNoDamageTicks(int maxNoDamageTicks) throws InvalidIntegerException {
         if(maxNoDamageTicks < 0){
@@ -138,6 +146,8 @@ public class KitData {
         this.maxNoDamageTicks = yamlData.getInt("maxNoDamageTicks", 0);
         this.knockbackMultiplier = yamlData.getDouble("knockbackMultiplier", 1);
         this.bowKnockbackMultiplier = yamlData.getDouble("bowKnockbackMultiplier", 1);
+        this.maxKnockbackSpeedMultiplier = yamlData.getDouble("maxKnockbackSpeedMultiplier", knockbackMultiplier*4);
+        this.yKnockbackAmount = yamlData.getDouble("yKnockbackAmount", 0.3);
     }
 
     public void saveChanges(){
@@ -146,6 +156,8 @@ public class KitData {
         yamlData.set("maxNoDamageTicks", 0);
         yamlData.set("name", kitName);
         yamlData.set("combo", combo);
+        yamlData.set("maxKnockbackSpeedMultiplier", knockbackMultiplier);
+        yamlData.set("yKnockbackAmount", yKnockbackAmount);
         String data = yamlData.saveToString();
         new BukkitRunnable() {
             @Override

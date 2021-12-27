@@ -22,8 +22,8 @@ import java.util.Locale;
 import java.util.Objects;
 
 public class Utils {
-	static void sendPacket(Player player, Player player2) {
-		PacketContainer velPacket = makePacket(player);
+	static void sendVelocityPacket(Player player, Player player2) {
+		PacketContainer velPacket = makeVelocityPacket(player);
 
 		try{
 			DuelsCombo.getInstance().getProtocolManager().sendServerPacket(player, velPacket);
@@ -33,7 +33,7 @@ public class Utils {
 		}
 	}
 
-	private static @NotNull PacketContainer makePacket(@NotNull Player player) {
+	private static @NotNull PacketContainer makeVelocityPacket(@NotNull Player player) {
 		Vector vel = player.getVelocity();
 		PacketContainer velPacket = new PacketContainer(PacketType.Play.Server.ENTITY_VELOCITY);
 		velPacket.getIntegers()
@@ -44,8 +44,8 @@ public class Utils {
 		return velPacket;
 	}
 
-	static void sendPacket(Player player) {
-		PacketContainer velPacket = makePacket(player);
+	static void sendVelocityPacket(Player player) {
+		PacketContainer velPacket = makeVelocityPacket(player);
 		try{
 			DuelsCombo.getInstance().getProtocolManager().sendServerPacket(player, velPacket);
 		} catch (InvocationTargetException e) {
@@ -84,7 +84,7 @@ public class Utils {
 				player.updateInventory();
 			}
 			return mat;
-		};
+		}
 		if(isArrow(playerInventory.getItemInOffHand().getType())) {
 			ItemStack stack = playerInventory.getItemInOffHand();
 			Material mat = stack.getType();
@@ -93,7 +93,7 @@ public class Utils {
 				player.updateInventory();
 			}
 			return mat;
-		};
+		}
 		for (ItemStack itemStack : playerInventory) {
 			if(itemStack != null && isArrow(itemStack.getType())) {
 				Material mat = itemStack.getType();
@@ -102,11 +102,12 @@ public class Utils {
 					player.updateInventory();
 				}
 				return mat;
-			};
+			}
 		}
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	static void passBowFlags(ItemStack bow, Entity firedProjectile){
 		if(bow.getItemMeta() == null) return;
 		ItemMeta meta = bow.getItemMeta();

@@ -28,7 +28,7 @@ public class KitData {
     @Getter
     private boolean exists;
 
-    private String configPath;
+    private final String configPath;
 
     @Getter
     @Setter
@@ -41,10 +41,6 @@ public class KitData {
     @Getter
     @Setter
     private double knockbackMultiplier = 1;
-
-    @Getter
-    @Setter
-    private double bowKnockbackMultiplier = 1;
 
     @Getter
     @Setter
@@ -143,15 +139,13 @@ public class KitData {
     private void parseKitData(){
         this.kitName = parseString(yamlData.get("name"));
         this.combo = parseBoolean(yamlData.get("combo"));
-        this.maxNoDamageTicks = yamlData.getInt("maxNoDamageTicks", 0);
+        this.maxNoDamageTicks = yamlData.getInt("maxNoDamageTicks", 20);
         this.knockbackMultiplier = yamlData.getDouble("knockbackMultiplier", 1);
-        this.bowKnockbackMultiplier = yamlData.getDouble("bowKnockbackMultiplier", 1);
         this.maxKnockbackSpeedMultiplier = yamlData.getDouble("maxKnockbackSpeedMultiplier", knockbackMultiplier*4);
         this.yKnockbackAmount = yamlData.getDouble("yKnockbackAmount", 0.3);
     }
 
     public void saveChanges(){
-        yamlData.set("bowKnockbackMultiplier", bowKnockbackMultiplier);
         yamlData.set("knockbackMultiplier", knockbackMultiplier);
         yamlData.set("maxNoDamageTicks", 0);
         yamlData.set("name", kitName);

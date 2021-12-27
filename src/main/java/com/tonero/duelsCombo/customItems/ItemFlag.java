@@ -29,7 +29,7 @@ public enum ItemFlag {
 	 */
 	TIME_BETWEEN_BOW_SHOTS("timeBetweenBowShots", "time-between-bow-shots", DataType.INT, false),
 	PROJECTILE_VELOCITY_MULTIPLIER("projectileVelocityMultiplier", "projectile-velocity-multiplier", DataType.DOUBLE, false),
-	PROJECTILE_EXPLOSION_SIZE("arrowExplosionSize", "arrow-explosion-size", DataType.DOUBLE, true),
+	PROJECTILE_EXPLOSION_SIZE("arrowExplosionSize", "projectile-explosion-size", DataType.DOUBLE, true),
 	PROJECTILE_EXPLOSION_DESTROY_BLOCKS("projectileExplosionDestroyBlocks", "projectile-explosion-destroy-blocks", DataType.BOOL, true);
 
 	@Getter

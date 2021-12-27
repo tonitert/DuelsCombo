@@ -12,7 +12,7 @@ public class SetComboCommand extends Command {
     Duels duelsAPI;
     DuelsCombo plugin;
     public SetComboCommand(final DuelsCombo plugin, final Duels api){
-        super(plugin, api, "setcombo", "setcombo [kit] [comboDuel:true|false] [noDamageTicks] [knockbackMultiplier] [bowKnockbackMultiplier] [maxKnockbackSpeedMultiplier] [knockbackYMultiplier]", plugin.getLang().getSetOptionsDesc(),5, false);
+        super(plugin, api, "setcombo", "setcombo [kit] [comboDuel:true|false] [noDamageTicks] [knockbackMultiplier] [maxKnockbackSpeedMultiplier] [knockbackYMultiplier]", plugin.getLang().getSetOptionsDesc(),5, false);
         this.duelsAPI = api;
         this.plugin = plugin;
     }
@@ -62,8 +62,8 @@ public class SetComboCommand extends Command {
             }
             if(args.length >= 7){
                 try{
-                    double kbAmount = Double.parseDouble(args[6]);
-                    kitData.setBowKnockbackMultiplier(kbAmount);
+                    double maxKbAmount = Double.parseDouble(args[6]);
+                    kitData.setMaxKnockbackSpeedMultiplier(maxKbAmount);
                 }
                 catch(Exception e){
                     plugin.getLang().sendTo(sender, plugin.getLang().getUsageFormat() + super.getUsage(), true);
@@ -72,17 +72,7 @@ public class SetComboCommand extends Command {
             }
             if(args.length >= 8){
                 try{
-                    double maxKbAmount = Double.parseDouble(args[7]);
-                    kitData.setMaxKnockbackSpeedMultiplier(maxKbAmount);
-                }
-                catch(Exception e){
-                    plugin.getLang().sendTo(sender, plugin.getLang().getUsageFormat() + super.getUsage(), true);
-                    return;
-                }
-            }
-            if(args.length >= 9){
-                try{
-                    double yKb = Double.parseDouble(args[8]);
+                    double yKb = Double.parseDouble(args[7]);
                     kitData.setYKnockbackAmount(yKb);
                 }
                 catch(Exception e){

@@ -20,6 +20,7 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
 import java.util.HashMap;
@@ -41,6 +42,8 @@ public class BukkitListener implements Listener {
 
 	private final HashMap<Player, Boolean> canFire = new HashMap<>();
 
+	private final HashMap<Player, BukkitTask> isHoldingDown = new HashMap<>();
+
 	public BukkitListener(){
 		DuelsCombo.getInstance().getDuelsAPI().registerListener(this);
 		DuelsCombo.getInstance().getServer().getPluginManager().registerEvents(this, DuelsCombo.getInstance());
@@ -56,7 +59,6 @@ public class BukkitListener implements Listener {
 	@EventHandler
 	private void onProjectileHit(ProjectileHitEvent e){
 		Double kb = e.getEntity().getPersistentDataContainer().get(ItemFlag.SHOOTER_BOW_KNOCKBACK.getNamespacedKey(), PersistentDataType.DOUBLE);
-		Player player;
 		ProjectileSource shooterSource = e.getEntity().getShooter();
 		if(!(shooterSource instanceof Player)) return;
 		Player shooter = (Player) shooterSource;
@@ -102,22 +104,6 @@ public class BukkitListener implements Listener {
 					}.runTaskLater(DuelsCombo.getInstance(), 1L);
 				}
 			}
-
-			if(!(e.getHitEntity() instanceof Player)) return;
-			player = (Player) e.getHitEntity();
-			if(Utils.checkInMatch(shooter, player)) {
-				KitData kitData = Utils.getKitData(player);
-				double kbMp = kitData.getBowKnockbackMultiplier();
-				if (kbMp != 1d) {
-					new BukkitRunnable() {
-						@Override
-						public void run() {
-							player.setVelocity(player.getLocation().toVector().subtract(shooter.getLocation().toVector()).multiply(kbMp));
-							Utils.sendPacket(player, shooter);
-						}
-					}.runTaskLater(DuelsCombo.getInstance(), 1L);
-				}
-			}
 		}
 	}
 
@@ -130,35 +116,47 @@ public class BukkitListener implements Listener {
 	@EventHandler
 	private void onInteract(PlayerInteractEvent e){
 		Player p = e.getPlayer();
-		if(p.getGameMode() != GameMode.SPECTATOR && e.getItem() != null && (e.getItem().getType() == Material.BOW || e.getItem().getType() == Material.CROSSBOW) &&
+		if(p.getGameMode() != GameMode.SPECTATOR && e.getItem() != null &&
+				(e.getItem().getType() == Material.BOW || e.getItem().getType() == Material.CROSSBOW) &&
 				e.getItem().getItemMeta() != null &&
-				ItemFlag.getBool(ItemFlag.BOW_INSTANT_SHOOT, e.getItem().getItemMeta()) && !canFire.containsKey(p)) {
-			Material arrow = Utils.takeFirstArrow(p, !(p.getGameMode() == GameMode.CREATIVE || e.getItem().getEnchantmentLevel(Enchantment.ARROW_INFINITE) != 0));
-			if(arrow != null){
-				Class<? extends AbstractArrow> arrowClass = null;
-				switch (arrow){
-					case ARROW:
-					case TIPPED_ARROW:
-						arrowClass = Arrow.class;
-						break;
-					case SPECTRAL_ARROW:
-						arrowClass = SpectralArrow.class;
-						break;
+				ItemFlag.getBool(ItemFlag.BOW_INSTANT_SHOOT, e.getItem().getItemMeta())) {
+			Integer cd = ItemFlag.getInt(ItemFlag.TIME_BETWEEN_BOW_SHOTS, e.getItem().getItemMeta());
+			if(!canFire.containsKey(p) && isHoldingDown.get(p) != null){
+				Material arrow = Utils.takeFirstArrow(p, !(p.getGameMode() == GameMode.CREATIVE || e.getItem().getEnchantmentLevel(Enchantment.ARROW_INFINITE) != 0));
+				if(arrow != null){
+					Class<? extends AbstractArrow> arrowClass = null;
+					switch (arrow){
+						case ARROW:
+						case TIPPED_ARROW:
+							arrowClass = Arrow.class;
+							break;
+						case SPECTRAL_ARROW:
+							arrowClass = SpectralArrow.class;
+							break;
+					}
+					assert arrowClass != null;
+					Projectile proj = p.launchProjectile(arrowClass);
+					Utils.setProjectileSpeedFromMultiplier(e.getItem(), proj);
+					Utils.passBowFlags(e.getItem(), proj);
+					if(cd != null){
+						canFire.put(e.getPlayer(), false);
+						new BukkitRunnable(){
+							@Override
+							public void run() {
+								canFire.remove(e.getPlayer());
+							}
+						}.runTaskLater(DuelsCombo.getInstance(), cd);
+					}
 				}
-				assert arrowClass != null;
-				Projectile proj = p.launchProjectile(arrowClass);
-				Utils.setProjectileSpeedFromMultiplier(e.getItem(), proj);
-				Integer cd = ItemFlag.getInt(ItemFlag.TIME_BETWEEN_BOW_SHOTS, e.getItem().getItemMeta());
-				Utils.passBowFlags(e.getItem(), proj);
-				if(cd != null){
-					canFire.put(e.getPlayer(), false);
-					new BukkitRunnable(){
-						@Override
-						public void run() {
-							canFire.remove(e.getPlayer());
-						}
-					}.runTaskLater(DuelsCombo.getInstance(), cd);
-				}
+			}
+			if(cd != null){
+				BukkitRunnable rnbl = new BukkitRunnable() {
+					@Override
+					public void run() {
+						isHoldingDown.remove(p);
+					}
+				};
+				isHoldingDown.put(p, rnbl.runTaskLater(DuelsCombo.getInstance(), cd));
 				e.setCancelled(true);
 			}
 		}
@@ -168,14 +166,14 @@ public class BukkitListener implements Listener {
 		Location playerLoc = p.getLocation();
 		if(!Objects.equals(dat.arrowPos.getWorld(), playerLoc.getWorld())) return;
 		p.setVelocity(dat.arrowPos.toVector().add(new Vector(0, 2, 0)).subtract(playerLoc.toVector()).multiply(-dat.kb));
-		Utils.sendPacket(p);
+		Utils.sendVelocityPacket(p);
 	}
 
 	@EventHandler
 	private void onDamage(EntityDamageByEntityEvent e){
 		if(!(e.getDamager() instanceof Player) || !(e.getEntity() instanceof Player)) return;
 		Player hitter = (Player) e.getDamager();
-		Utils.checkInMatch(hitter, (Player) e.getEntity());
+		if(!Utils.checkInMatch(hitter, (Player) e.getEntity())) return;
 		KitData kitData = Utils.getKitData(hitter);
 		double kb = kitData.getKnockbackMultiplier();
 		if(kb == 1) return;
@@ -188,8 +186,7 @@ public class BukkitListener implements Listener {
 			((LivingEntity) e.getEntity()).damage(dmg);
 		}
 
-		//Check if velocity after giving kb is bigger than maxVelocity
-
+		//Check if velocity after applying kb is bigger than maxVelocity
 		double maxKb = kitData.getMaxKnockbackSpeedMultiplier();
 		Vector eVel = e.getEntity().getVelocity();
 		Vector maxVel = eVel.clone().normalize().multiply(maxKb);
@@ -204,10 +201,11 @@ public class BukkitListener implements Listener {
 			}else{
 				e.getEntity().setVelocity(eVel.add(maxVel.subtract(eVel)));
 			}
-			Utils.sendPacket(hitter);
+			Utils.sendVelocityPacket(hitter);
 			if(e.getEntity() instanceof Player){
-				Utils.sendPacket((Player) e.getEntity());
+				Utils.sendVelocityPacket((Player) e.getEntity());
 			}
 		}
+
 	}
 }

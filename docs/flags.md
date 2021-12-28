@@ -13,7 +13,7 @@ Flags can have different data types, which control what values can be set to the
 * **projectile-shooter-knockback**: Sets how much the bow shooter's velocity is changed when the projectile hits and right or left click is pressed. Mainly used for creating grappling hook bows, which propel the player in the direction of the projectile, when the player clicks a mouse button. Data type: double
 * **switch-positions-on-projectile-hit**: Whether to switch positions of the shooter and the shot entity on projectile hit. Data type: boolean
 * **bow-instant-shoot**: Whether to make a bow shoot arrows instantly when the interact key is pressed. Data type: bool
-* **time-between-bow-shots**: Cooldown in ticks after shooting the bow. Data type: int
+* **time-between-bow-shots**: Time to cancel bow shooting for after shooting the bow. Currently only works when bow-instant-shoot is true. Data type: int
 * **projectile-velocity-multiplier**: Multiplier for the velocity of the shot projectile. Data type: double
-* **projectile-explosion-size**: Size of the explosion created when the projectile hits an obstacle. Data type: double
-* **projectile-explosion-destroy-blocks**: Whether to make the projectile destroy blocks. Data type: bool
+* **projectile-explosion-size**: Size of the explosion created when the projectile hits an obstacle. If set to 0, no explosion will be created. Data type: double
+* **projectile-explosion-destroy-blocks**: Whether to make the projectile explosion destroy blocks. Data type: bool

@@ -17,7 +17,6 @@ import java.util.logging.Logger;
 public class KitData {
 
     public static class InvalidIntegerException extends Exception {
-
         public InvalidIntegerException(String message) {
             super(message);
         }
@@ -88,22 +87,21 @@ public class KitData {
     }
 
     private void loadKitData(String path, KitManager kitManager){
-
         if(!path.endsWith(".yml")){
             exists = false;
             return;
         }
         YamlConfiguration kitConfig = YamlConfiguration.loadConfiguration(new File(path));
         try{
-            String arenaName = kitConfig.getString("name");
-            if(arenaName == null){
+            String kitName = kitConfig.getString("name");
+            if(kitName == null){
                 exists = false;
-                DuelsCombo.getInstance().getLogger().warning("Arena at " + path + " doesn't have a name parameter, skipping");
+                DuelsCombo.getInstance().getLogger().warning("Kit at " + path + " doesn't have a name parameter, skipping");
                 return;
             }
-            if(kitManager.get(arenaName) == null){
+            if(kitManager.get(kitName) == null){
                 exists = false;
-                DuelsCombo.getInstance().getLogger().warning("Arena " + arenaName + " wasn't found, skipping");
+                DuelsCombo.getInstance().getLogger().warning("Kit " + kitName + " wasn't found, skipping");
                 return;
             }
             exists = true;

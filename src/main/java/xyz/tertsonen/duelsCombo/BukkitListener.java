@@ -1,7 +1,5 @@
-package com.tonero.duelsCombo;
+package xyz.tertsonen.duelsCombo;
 
-import com.tonero.duelsCombo.customItems.ItemFlag;
-import com.tonero.duelsCombo.saveData.KitData;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -22,6 +20,8 @@ import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
+import xyz.tertsonen.duelsCombo.customItems.ItemFlag;
+import xyz.tertsonen.duelsCombo.saveData.KitData;
 
 import java.util.HashMap;
 import java.util.Objects;

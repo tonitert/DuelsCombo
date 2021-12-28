@@ -1,10 +1,10 @@
-package com.tonero.duelsCombo.commands.subcommands;
+package xyz.tertsonen.duelsCombo.commands.subcommands;
 
-import com.tonero.duelsCombo.DuelsCombo;
-import com.tonero.duelsCombo.commands.Command;
-import com.tonero.duelsCombo.customItems.ItemFlag;
 import me.realized.duels.api.Duels;
 import org.bukkit.command.CommandSender;
+import xyz.tertsonen.duelsCombo.DuelsCombo;
+import xyz.tertsonen.duelsCombo.commands.Command;
+import xyz.tertsonen.duelsCombo.customItems.ItemFlag;
 
 import java.util.logging.Level;
 

@@ -1,9 +1,9 @@
-package com.tonero.duelsCombo.commands;
+package xyz.tertsonen.duelsCombo.commands;
 
-import com.tonero.duelsCombo.DuelsCombo;
 import lombok.Getter;
 import me.realized.duels.api.Duels;
 import org.bukkit.command.CommandSender;
+import xyz.tertsonen.duelsCombo.DuelsCombo;
 
 public abstract class Command {
     @Getter

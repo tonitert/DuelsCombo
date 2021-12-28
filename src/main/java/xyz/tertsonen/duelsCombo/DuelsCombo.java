@@ -1,13 +1,13 @@
-package com.tonero.duelsCombo;
+package xyz.tertsonen.duelsCombo;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
-import com.tonero.duelsCombo.commands.Commands;
-import com.tonero.duelsCombo.saveData.SaveDataManager;
 import lombok.Getter;
 import me.realized.duels.api.Duels;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import xyz.tertsonen.duelsCombo.commands.Commands;
+import xyz.tertsonen.duelsCombo.saveData.SaveDataManager;
 
 public class DuelsCombo extends JavaPlugin {
     @Getter

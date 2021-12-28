@@ -1,19 +1,22 @@
-package com.tonero.duelsCombo.saveData;
+package xyz.tertsonen.duelsCombo.saveData;
 
-import com.tonero.duelsCombo.DuelsCombo;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import me.realized.duels.api.kit.KitManager;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import xyz.tertsonen.duelsCombo.DuelsCombo;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@NoArgsConstructor
 public class KitData {
 
     public static class InvalidIntegerException extends Exception {
@@ -21,13 +24,7 @@ public class KitData {
             super(message);
         }
     }
-
-    private YamlConfiguration yamlData;
-
-    @Getter
-    private boolean exists;
-
-    private final String configPath;
+    private String configPath;
 
     @Getter
     @Setter
@@ -51,6 +48,10 @@ public class KitData {
 
     @Getter
     private int maxNoDamageTicks;
+
+    @Getter
+    private boolean loaded = false;
+
     public void setMaxNoDamageTicks(int maxNoDamageTicks) throws InvalidIntegerException {
         if(maxNoDamageTicks < 0){
             throw new InvalidIntegerException("Integer maxScore must be above 1.");
@@ -58,62 +59,34 @@ public class KitData {
         this.maxNoDamageTicks = maxNoDamageTicks;
     }
 
-    public KitData(YamlConfiguration yamlData, String configPath){
-        this.yamlData = yamlData;
-        this.configPath = configPath;
-    }
-
-    public KitData(String configPath, String kitName, boolean createFile) {
-        this.kitName = kitName;
-        if(createFile){
-            this.configPath = configPath;
-            if(Files.exists(Paths.get(configPath))){
-                loadKitData(configPath, DuelsCombo.getInstance().getDuelsAPI().getKitManager());
-            }else{
-                this.yamlData = new YamlConfiguration();
-                yamlData.set("name", kitName);
-                exists = true;
-                saveChanges();
-            }
-
-        }else{
-            this.configPath = configPath;
-            if(Files.exists(Paths.get(configPath))){
-                loadKitData(configPath, DuelsCombo.getInstance().getDuelsAPI().getKitManager());
-            }else{
-                this.exists = false;
-            }
-        }
-    }
-
-    private void loadKitData(String path, KitManager kitManager){
+    /**
+     * Tries to load the specified kit from a file, and creates it if it does not exist
+     * @param path path to kit save file
+     * @param kitName kit name, name in already existing kit is preferred over this
+     * @return true if succeeded
+     */
+    public boolean loadOrCreateKit(@NotNull String path, String kitName, boolean createIfDoesntExist){
         if(!path.endsWith(".yml")){
-            exists = false;
-            return;
+            return false;
         }
-        YamlConfiguration kitConfig = YamlConfiguration.loadConfiguration(new File(path));
-        try{
-            String kitName = kitConfig.getString("name");
-            if(kitName == null){
-                exists = false;
-                DuelsCombo.getInstance().getLogger().warning("Kit at " + path + " doesn't have a name parameter, skipping");
-                return;
+        if(Files.exists(Paths.get(path))){
+            try{
+                YamlConfiguration kitConfig = YamlConfiguration.loadConfiguration(new File(path));
+                parseKitData(kitConfig);
             }
-            if(kitManager.get(kitName) == null){
-                exists = false;
-                DuelsCombo.getInstance().getLogger().warning("Kit " + kitName + " wasn't found, skipping");
-                return;
+            catch (Exception e){
+                return false;
             }
-            exists = true;
-            this.yamlData = kitConfig;
-            parseKitData();
+        }else{
+            if(createIfDoesntExist){
+                this.kitName = kitName;
+                this.configPath = path;
+                saveChanges();
+            }else return false;
         }
-        catch(Exception ex){
-            DuelsCombo.getInstance().getLogger().log(Level.SEVERE,"Error while parsing arena configuration at " + path + ":\n");
-            ex.printStackTrace();
-            this.yamlData = new YamlConfiguration();
-            exists = false;
-        }
+        this.configPath = path;
+        loaded = true;
+        return true;
     }
 
     private boolean parseBoolean(Object object){
@@ -125,7 +98,8 @@ public class KitData {
         }
     }
 
-    private String parseString(Object object){
+    @Contract(pure = true)
+    private @Nullable String parseString(Object object){
         try{
             return (String) object;
         }
@@ -134,7 +108,7 @@ public class KitData {
         }
     }
 
-    private void parseKitData(){
+    private void parseKitData(@NotNull YamlConfiguration yamlData){
         this.kitName = parseString(yamlData.get("name"));
         this.combo = parseBoolean(yamlData.get("combo"));
         this.maxNoDamageTicks = yamlData.getInt("maxNoDamageTicks", 20);
@@ -144,8 +118,9 @@ public class KitData {
     }
 
     public void saveChanges(){
+        YamlConfiguration yamlData = new YamlConfiguration();
         yamlData.set("knockbackMultiplier", knockbackMultiplier);
-        yamlData.set("maxNoDamageTicks", 0);
+        yamlData.set("maxNoDamageTicks", maxNoDamageTicks);
         yamlData.set("name", kitName);
         yamlData.set("combo", combo);
         yamlData.set("maxKnockbackSpeedMultiplier", knockbackMultiplier);

@@ -1,4 +1,4 @@
-package com.tonero.duelsCombo.customItems;
+package xyz.tertsonen.duelsCombo.customItems;
 
 import org.bukkit.persistence.PersistentDataType;
 

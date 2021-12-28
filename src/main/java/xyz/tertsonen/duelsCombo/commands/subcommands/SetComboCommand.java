@@ -1,19 +1,17 @@
-package com.tonero.duelsCombo.commands.subcommands;
+package xyz.tertsonen.duelsCombo.commands.subcommands;
 
-import com.tonero.duelsCombo.DuelsCombo;
-import com.tonero.duelsCombo.commands.Command;
-import com.tonero.duelsCombo.saveData.KitData;
 import me.realized.duels.api.Duels;
 import org.bukkit.command.CommandSender;
+import xyz.tertsonen.duelsCombo.DuelsCombo;
+import xyz.tertsonen.duelsCombo.commands.Command;
+import xyz.tertsonen.duelsCombo.saveData.KitData;
 
 import java.util.logging.Level;
 
 public class SetComboCommand extends Command {
-    Duels duelsAPI;
-    DuelsCombo plugin;
+    private final DuelsCombo plugin;
     public SetComboCommand(final DuelsCombo plugin, final Duels api){
         super(plugin, api, "setcombo", "setcombo [kit] [comboDuel:true|false] [noDamageTicks] [knockbackMultiplier] [maxKnockbackSpeedMultiplier] [knockbackYMultiplier]", plugin.getLang().getSetOptionsDesc(),5, false);
-        this.duelsAPI = api;
         this.plugin = plugin;
     }
     @Override
@@ -23,13 +21,12 @@ public class SetComboCommand extends Command {
                 plugin.getLang().sendTo(sender, plugin.getLang().getUsageFormat() + super.getUsage(), true);
                 return;
             }
-            KitData kitData = plugin.getSaveDataManager().getKit(args[2]);
+            KitData kitData = plugin.getSaveDataManager().getOrCreate(args[2]);
             if(kitData == null){
                 plugin.getLang().sendTo(sender, plugin.getLang().getInvalidKit(), true);
                 return;
             }
             boolean isComboDuel;
-
             try{
                 isComboDuel = Boolean.parseBoolean(args[3]);
             }

@@ -1,8 +1,5 @@
-package com.tonero.duelsCombo.commands.subcommands;
+package xyz.tertsonen.duelsCombo.commands.subcommands;
 
-import com.tonero.duelsCombo.DuelsCombo;
-import com.tonero.duelsCombo.commands.Command;
-import com.tonero.duelsCombo.customItems.ItemFlag;
 import me.realized.duels.api.Duels;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -10,6 +7,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import xyz.tertsonen.duelsCombo.DuelsCombo;
+import xyz.tertsonen.duelsCombo.commands.Command;
+import xyz.tertsonen.duelsCombo.customItems.ItemFlag;
 
 public class SetFlagCommand extends Command {
 
@@ -28,7 +28,7 @@ public class SetFlagCommand extends Command {
 		}
 
 		if(!(sender instanceof Player)){
-			sender.sendMessage(plugin.getLang().getOnlyInGameCommand());
+			plugin.getLang().sendTo(sender, plugin.getLang().getOnlyInGameCommand());
 			return;
 		}
 

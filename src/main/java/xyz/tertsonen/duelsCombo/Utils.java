@@ -1,9 +1,7 @@
-package com.tonero.duelsCombo;
+package xyz.tertsonen.duelsCombo;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
-import com.tonero.duelsCombo.customItems.ItemFlag;
-import com.tonero.duelsCombo.saveData.KitData;
 import me.realized.duels.api.Duels;
 import me.realized.duels.api.kit.Kit;
 import org.bukkit.Material;
@@ -16,12 +14,15 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
+import xyz.tertsonen.duelsCombo.customItems.ItemFlag;
+import xyz.tertsonen.duelsCombo.saveData.KitData;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
 import java.util.Objects;
 
 public class Utils {
+
 	static void sendVelocityPacket(Player player, Player player2) {
 		PacketContainer velPacket = makeVelocityPacket(player);
 

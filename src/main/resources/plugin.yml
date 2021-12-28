@@ -1,6 +1,6 @@
 name: DuelsCombo
 version: 1.0
 author: tonero
-main: com.tonero.duelsCombo.DuelsCombo
+main: xyz.tertsonen.duelsCombo.DuelsCombo
 api-version: 1.17
 depend: [Duels, ProtocolLib]

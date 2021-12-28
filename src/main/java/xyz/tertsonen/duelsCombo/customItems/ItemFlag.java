@@ -1,12 +1,12 @@
-package com.tonero.duelsCombo.customItems;
+package xyz.tertsonen.duelsCombo.customItems;
 
-import com.tonero.duelsCombo.DuelsCombo;
 import lombok.Getter;
 import org.bukkit.NamespacedKey;
 import org.bukkit.persistence.PersistentDataHolder;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import xyz.tertsonen.duelsCombo.DuelsCombo;
 
 import java.util.HashMap;
 
@@ -42,7 +42,7 @@ public enum ItemFlag {
 	private final boolean projectileFlag;
 
 	private static final HashMap<String, ItemFlag> lookup = new HashMap<>();
-	private static HashMap<NamespacedKey, ItemFlag> nsKeyLookup = null;
+	private static HashMap<NamespacedKey, ItemFlag> namespacedKeyLookup = null;
 
 	static {
 		for (ItemFlag value : ItemFlag.values()) {
@@ -57,13 +57,13 @@ public enum ItemFlag {
 
 	@Nullable
 	public static ItemFlag getByNameSpacedKey(NamespacedKey namespacedKey){
-		if(nsKeyLookup == null){
-			nsKeyLookup = new HashMap<>();
+		if(namespacedKeyLookup == null){
+			namespacedKeyLookup = new HashMap<>();
 			for (ItemFlag value : ItemFlag.values()) {
-				nsKeyLookup.put(value.getNamespacedKey(), value);
+				namespacedKeyLookup.put(value.getNamespacedKey(), value);
 			}
 		}
-		return nsKeyLookup.get(namespacedKey);
+		return namespacedKeyLookup.get(namespacedKey);
 	}
 
 	private NamespacedKey nKey = null;

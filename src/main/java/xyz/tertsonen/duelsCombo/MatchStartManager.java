@@ -1,7 +1,6 @@
-package com.tonero.duelsCombo;
+package xyz.tertsonen.duelsCombo;
 
-import com.tonero.duelsCombo.saveData.KitData;
-import me.realized.duels.api.Duels;
+import me.realized.duels.api.event.kit.KitRemoveEvent;
 import me.realized.duels.api.event.match.MatchEndEvent;
 import me.realized.duels.api.event.match.MatchStartEvent;
 import me.realized.duels.api.kit.Kit;
@@ -9,12 +8,11 @@ import me.realized.duels.api.match.Match;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import xyz.tertsonen.duelsCombo.saveData.KitData;
 
 import java.util.HashMap;
 
 public class MatchStartManager implements Listener {
-
-    private final Duels duelsAPI;
 
     private static class PlayerData {
         public Player player;
@@ -31,20 +29,26 @@ public class MatchStartManager implements Listener {
     public MatchStartManager(){
         DuelsCombo.getInstance().getDuelsAPI().registerListener(this);
         DuelsCombo.getInstance().getServer().getPluginManager().registerEvents(this, DuelsCombo.getInstance());
-        duelsAPI = DuelsCombo.getInstance().getDuelsAPI();
     }
 
     @EventHandler
     void onMatchStart(MatchStartEvent event){
         if(!DuelsCombo.getInstance().isActive()) return;
-        KitData kit = DuelsCombo.getInstance().getSaveDataManager().getKit(event.getMatch().getKit().getName());
+        Kit kit = event.getMatch().getKit();
         if(kit == null) return;
-        if(kit.isCombo()){
+        KitData kitData = DuelsCombo.getInstance().getSaveDataManager().getKit(event.getMatch().getKit().getName());
+        if(kitData == null) return;
+        if(kitData.isCombo()){
             matches.put(event.getMatch(), new PlayerData[]{new PlayerData(event.getPlayers()[0]), new PlayerData(event.getPlayers()[1])});
             for (Player player: event.getPlayers()) {
-                player.setMaximumNoDamageTicks(kit.getMaxNoDamageTicks());
+                player.setMaximumNoDamageTicks(kitData.getMaxNoDamageTicks());
             }
         }
+    }
+
+    @EventHandler
+    void kitDelete(KitRemoveEvent kitRemoveEvent) {
+
     }
 
     @EventHandler

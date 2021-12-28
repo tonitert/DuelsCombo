@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.tonero.duelsCombo</groupId>
+    <groupId>xyz.tertsonen.duelsCombo</groupId>
     <artifactId>DuelsCombo</artifactId>
     <version>1.1</version>
     <properties>
@@ -61,7 +61,7 @@
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>RELEASE</version>
+            <version>22.0.0</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

@@ -1,4 +1,4 @@
-package com.tonero.duelsCombo;
+package xyz.tertsonen.duelsCombo;
 
 
 import lombok.Getter;
@@ -31,9 +31,11 @@ public class Lang {
     @Getter
     private final String kitsHeader = "&7--------------- &9Kitit:&7 ---------------";
     @Getter
-    private final String kitFormat = "&7Kit: %s Combo: %b MaxNoDamageTicks: %o";
+    private final String kitFormat = "&7Kit: %s Combo: %b No damage ticks: %o Knockback multiplier: %f Maximum knockback multiplier: %f Y axis knockback: %f";
     @Getter
     private final String kitsFooter = "&7-------------------------------------";
+    @Getter
+    private final String noKitsMessage = "Kittejä ei löytynyt.";
     @Getter
     private final String onlyInGameCommand = "Tämä komento toimii vain pelaajan kutsumana.";
     @Getter
@@ -46,6 +48,8 @@ public class Lang {
     private final String flagFormat = "&7Flag: %s Tyyppi: %s";
     @Getter
     private final String flagsFooter = "&7-------------------------------------";
+    @Getter
+    private final String noFlagsMessage = "Flageja ei löytynyt.";
 
 
     public static String color(final String s) {
@@ -53,7 +57,7 @@ public class Lang {
     }
 
     public String format(String message, boolean prefix){
-        return color((prefix ? "&9[DuelsCombo] &7" : "") + message);
+        return color((prefix ? "&9[DuelsCombo] &7" : "&7") + message);
     }
 
     public void sendTo(CommandSender sender, String string, boolean prefix){

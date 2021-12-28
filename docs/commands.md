@@ -39,7 +39,7 @@ Lists all saved settings related to kits.
 
 ## listflags
 
-Lists all flags applied to the item currently held in the player's hand.
+Lists all flags that can be set to a item.
 
 ### Usage
 

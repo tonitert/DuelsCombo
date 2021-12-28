@@ -48,7 +48,7 @@ public class MatchStartManager implements Listener {
 
     @EventHandler
     void kitDelete(KitRemoveEvent kitRemoveEvent) {
-
+        DuelsCombo.getInstance().getSaveDataManager().deleteKit(kitRemoveEvent.getKit().getName());
     }
 
     @EventHandler

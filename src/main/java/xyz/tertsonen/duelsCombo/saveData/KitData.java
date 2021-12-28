@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import xyz.tertsonen.duelsCombo.DuelsCombo;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -65,7 +66,7 @@ public class KitData {
      * @param kitName kit name, name in already existing kit is preferred over this
      * @return true if succeeded
      */
-    public boolean loadOrCreateKit(@NotNull String path, String kitName, boolean createIfDoesntExist){
+    protected boolean loadOrCreateKit(@NotNull String path, String kitName, boolean createIfDoesntExist){
         if(!path.endsWith(".yml")){
             return false;
         }
@@ -87,6 +88,12 @@ public class KitData {
         this.configPath = path;
         loaded = true;
         return true;
+    }
+
+    protected boolean deleteKit() throws IOException {
+        if(!loaded) return false;
+        loaded = false;
+        return Files.deleteIfExists(Paths.get(configPath));
     }
 
     private boolean parseBoolean(Object object){

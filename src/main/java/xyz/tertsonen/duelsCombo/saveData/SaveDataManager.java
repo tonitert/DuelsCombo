@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 import xyz.tertsonen.duelsCombo.DuelsCombo;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -32,6 +33,18 @@ public class SaveDataManager {
         if(!kitData.loadOrCreateKit(kitsFolderPath + name + ".yml", name, true)) return null;
         kits.put(name, kitData);
         return kitData;
+    }
+
+    public boolean deleteKit(String name){
+        KitData kitData = kits.remove(name);
+        if(kitData == null) return false;
+        try{
+            kitData.deleteKit();
+        }
+        catch(IOException e){
+            return false;
+        }
+        return true;
     }
 
     @SuppressWarnings("unchecked")

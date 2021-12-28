@@ -5,12 +5,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.tonero.duelsCombo</groupId>
-    <artifactId>duelsCombo</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>DuelsCombo</artifactId>
+    <version>1.1</version>
     <properties>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
     </properties>
+    <packaging>jar</packaging>
+    <build>
+        <finalName>DuelsCombo</finalName>
+    </build>
     <repositories>
         <repository>
             <id>jitpack-repo</id>

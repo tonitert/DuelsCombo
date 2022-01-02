@@ -43,8 +43,7 @@ public class DuelsCombo extends JavaPlugin {
     }
     @Override
     public void onDisable(){
-        saveDataManager = null;
-        lang = null;
+        instance = null;
         active = false;
     }
 }

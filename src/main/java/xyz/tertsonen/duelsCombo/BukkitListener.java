@@ -94,12 +94,7 @@ public class BukkitListener implements Listener {
 							Location l3 = shooter.getLocation();
 							Location shooterLoc = new Location(l3.getWorld(), l3.getX(), l3.getY(), l3.getZ());
 							hitEntity.teleport(shooterLoc);
-							new BukkitRunnable(){
-								@Override
-								public void run() {
-									DuelsCombo.getInstance().getLogger().info("succeed: " + shooter.teleport(oldHitEntityLoc));
-								}
-							}.runTaskLater(DuelsCombo.getInstance(), 2L);
+							shooter.teleport(oldHitEntityLoc);
 						}
 					}.runTaskLater(DuelsCombo.getInstance(), 1L);
 				}

@@ -14,7 +14,7 @@ public class ListCommand extends Command {
     Duels duelsAPI;
     DuelsCombo plugin;
     public ListCommand(final DuelsCombo plugin, final Duels api){
-        super(plugin, api, "list", "list", plugin.getLang().getSetOptionsDesc(),2, false);
+        super(plugin, api, "list", "list", plugin.getLang().getListDesc(),2, false);
         this.duelsAPI = api;
         this.plugin = plugin;
     }

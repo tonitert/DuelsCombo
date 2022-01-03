@@ -11,7 +11,7 @@ import java.util.logging.Level;
 public class SetComboCommand extends Command {
     private final DuelsCombo plugin;
     public SetComboCommand(final DuelsCombo plugin, final Duels api){
-        super(plugin, api, "setcombo", "setcombo [kit] [comboDuel:true|false] [noDamageTicks] [knockbackMultiplier] [maxKnockbackSpeedMultiplier] [knockbackYMultiplier]", plugin.getLang().getSetOptionsDesc(),5, false);
+        super(plugin, api, "setcombo", "setcombo [kit] [comboDuel:true|false] [noDamageTicks] [knockbackMultiplier] [maxKnockbackSpeedMultiplier] [knockbackYMultiplier]", plugin.getLang().getSetComboDesc(),5, false);
         this.plugin = plugin;
     }
     @Override

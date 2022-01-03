@@ -20,7 +20,11 @@ public class Lang {
     @Getter
     private final String setItemStatsDesc = "Asettaa kädessä olevan esineen asetukset.";
     @Getter
-    private final String createItemDesc = "Luo esineen annetuilla tiedoilla. playerBowKnockback: Pelaajalle annettava knockback nuolta kohti.";
+    private final String listFlagsDesc = "Näyttää kaikki mahdolliset flagit.";
+    @Getter
+    private final String listDesc = "Näyttää kaikkien kittien asetukset.";
+    @Getter
+    private final String setComboDesc = "Asettaa kitin asetukset.";
     @Getter
     private final String setOptionsSuccess = "Asetettu.";
     @Getter

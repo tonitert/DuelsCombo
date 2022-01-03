@@ -12,7 +12,7 @@ public class ListFlagsCommand extends Command {
     Duels duelsAPI;
     DuelsCombo plugin;
     public ListFlagsCommand(final DuelsCombo plugin, final Duels api){
-        super(plugin, api, "listflags", "listflags", plugin.getLang().getSetOptionsDesc(),1, false);
+        super(plugin, api, "listflags", "listflags", plugin.getLang().getListFlagsDesc(),1, false);
         this.duelsAPI = api;
         this.plugin = plugin;
     }

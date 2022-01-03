@@ -1,8 +1,5 @@
 package xyz.tertsonen.duelsCombo;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -30,21 +27,10 @@ import java.util.Objects;
 
 public class BukkitListener implements Listener {
 
-	@EqualsAndHashCode
-	@AllArgsConstructor
-	private static class LaunchData {
-		@Getter
-		private final Location arrowPos;
-
-		@Getter
-		private final double kb;
-	}
-
 	private final HashMap<Player, LaunchData> players = new HashMap<>();
 	private final HashMap<Player, BukkitRunnable> canFire = new HashMap<>();
 
 	public BukkitListener(){
-		DuelsCombo.getInstance().getDuelsAPI().registerListener(this);
 		DuelsCombo.getInstance().getServer().getPluginManager().registerEvents(this, DuelsCombo.getInstance());
 	}
 
@@ -88,7 +74,7 @@ public class BukkitListener implements Listener {
 				public void run() {
 					LaunchData dat = players.get(shooter);
 					if(dat == null) return;
-					if(dat.arrowPos == projLoc) players.remove(shooter);
+					if(dat.getArrowPos() == projLoc) players.remove(shooter);
 				}
 			}.runTaskLater(DuelsCombo.getInstance(), /* 30 seconds */30 * 20L);
 		}
@@ -167,8 +153,8 @@ public class BukkitListener implements Listener {
 		LaunchData dat = players.remove(p);
 		if(dat == null) return;
 		Location playerLoc = p.getLocation();
-		if(!Objects.equals(dat.arrowPos.getWorld(), playerLoc.getWorld())) return;
-		p.setVelocity(dat.arrowPos.toVector().add(new Vector(0, 2, 0)).subtract(playerLoc.toVector()).multiply(-dat.kb));
+		if(!Objects.equals(dat.getArrowPos().getWorld(), playerLoc.getWorld())) return;
+		p.setVelocity(dat.getArrowPos().toVector().add(new Vector(0, 2, 0)).subtract(playerLoc.toVector()).multiply(-dat.getKb()));
 		Utils.sendVelocityPacket(p);
 	}
 
@@ -208,6 +194,5 @@ public class BukkitListener implements Listener {
 				Utils.sendVelocityPacket((Player) e.getEntity());
 			}
 		}
-
 	}
 }

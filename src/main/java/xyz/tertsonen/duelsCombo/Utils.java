@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import xyz.tertsonen.duelsCombo.customItems.ItemFlag;
@@ -109,7 +110,7 @@ public class Utils {
 	}
 
 	@SuppressWarnings("unchecked")
-	static void passBowFlags(ItemStack bow, Entity firedProjectile){
+	static <T> void passBowFlags(ItemStack bow, Entity firedProjectile){
 		if(bow.getItemMeta() == null) return;
 		ItemMeta meta = bow.getItemMeta();
 		PersistentDataContainer cont = meta.getPersistentDataContainer();
@@ -120,7 +121,8 @@ public class Utils {
 			ItemFlag flag = ItemFlag.getByNameSpacedKey(key);
 			if(flag == null) continue;
 			if(flag.isProjectileFlag()){
-				entityCont.set(key, flag.getType().dataType, Objects.requireNonNull(cont.get(key, flag.getType().dataType)));
+				PersistentDataType<T,T> type = (PersistentDataType<T, T>) flag.getType().dataType;
+				entityCont.set(key, type, Objects.requireNonNull(cont.get(key, type)));
 			}
 		}
 	}

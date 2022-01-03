@@ -26,6 +26,8 @@ public class Lang {
     @Getter
     private final String setComboDesc = "Asettaa kitin asetukset.";
     @Getter
+    private final String listItemFlagsDesc = "Näyttää esineen flagit.";
+    @Getter
     private final String setOptionsSuccess = "Asetettu.";
     @Getter
     private final String invalidKit = "Tuota kittiä ei ole olemassa.";
@@ -53,6 +55,8 @@ public class Lang {
     private final String flagFormat = "&7Flag: %s Tyyppi: %s";
     @Getter
     private final String flagsFooter = "&7-------------------------------------";
+    @Getter
+    private final String itemFlagFormat = "&7Flag: %s Arvo: %s";
     @Getter
     private final String noFlagsMessage = "Flageja ei löytynyt.";
 

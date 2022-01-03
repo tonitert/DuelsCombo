@@ -47,5 +47,13 @@ Lists all flags that can be set to a item.
 
 All available flags are listed [here](https://github.com/t0nero/DuelsCombo/blob/master/docs/flags.md).
 
+## listitemflags
+
+Shows all flags that have been assigned to the item currently held in the main hand.
+
+### Usage
+
+    /duels combo listitemflags
+
 
 

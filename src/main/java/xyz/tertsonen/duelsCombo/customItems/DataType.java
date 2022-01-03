@@ -11,7 +11,7 @@ public enum DataType {
 	DOUBLE(PersistentDataType.DOUBLE),
 	STRING(PersistentDataType.STRING);
 
-	public final PersistentDataType dataType;
+	public final PersistentDataType<?, ?> dataType;
 
 	DataType(PersistentDataType<?, ?> dataType) {
 		this.dataType = dataType;

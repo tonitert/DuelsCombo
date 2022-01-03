@@ -25,7 +25,6 @@ public class Utils {
 
 	static void sendVelocityPacket(Player player, Player player2) {
 		PacketContainer velPacket = makeVelocityPacket(player);
-
 		try{
 			DuelsCombo.getInstance().getProtocolManager().sendServerPacket(player, velPacket);
 			DuelsCombo.getInstance().getProtocolManager().sendServerPacket(player2, velPacket);
@@ -51,6 +50,7 @@ public class Utils {
 			DuelsCombo.getInstance().getProtocolManager().sendServerPacket(player, velPacket);
 		} catch (InvocationTargetException e) {
 			DuelsCombo.getInstance().getLogger().warning("Could not send velocity packet");
+			e.printStackTrace();
 		}
 	}
 

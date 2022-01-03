@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
+//TODO: Load strings from file
 public class Lang {
     @Getter
     private final String helpHeader = "&7--------------- &9Komennot:&7 ---------------";

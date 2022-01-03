@@ -133,6 +133,7 @@ public class KitData {
         yamlData.set("maxKnockbackSpeedMultiplier", knockbackMultiplier);
         yamlData.set("yKnockbackAmount", yKnockbackAmount);
         String data = yamlData.saveToString();
+        Logger log = DuelsCombo.getInstance().getLogger();
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -140,7 +141,6 @@ public class KitData {
                     Files.write(Paths.get(configPath), data.getBytes());
                 }
                 catch(Exception ex){
-                    Logger log = DuelsCombo.getInstance().getLogger();
                     log.severe("Exception while writing file:");
                     log.severe(ex.getMessage());
                     log.severe(Arrays.toString(ex.getStackTrace()));

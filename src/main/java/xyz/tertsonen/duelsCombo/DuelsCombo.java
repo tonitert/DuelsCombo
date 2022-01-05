@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.tertsonen.duelsCombo.commands.Commands;
 import xyz.tertsonen.duelsCombo.saveData.SaveDataManager;
+import xyz.tertsonen.duelsCombo.saveData.SaveHandlerImpl;
 
 public class DuelsCombo extends JavaPlugin {
     @Getter
@@ -32,7 +33,12 @@ public class DuelsCombo extends JavaPlugin {
         instance = this;
         lang = new Lang();
         duelsAPI = (Duels) Bukkit.getServer().getPluginManager().getPlugin("Duels");
-        saveDataManager = new SaveDataManager(getDataFolder());
+        if(duelsAPI == null){
+            getLogger().severe("Duels plugin cannot be found. Disabling plugin..");
+            this.getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+        saveDataManager = new SaveDataManager(getDataFolder(), duelsAPI.getKitManager(), new SaveHandlerImpl());
         if(matchStartManager == null){
             matchStartManager = new MatchStartManager();
             bukkitListener = new BukkitListener();

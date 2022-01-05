@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -18,13 +17,14 @@ import java.util.Arrays;
 import java.util.logging.Logger;
 
 @NoArgsConstructor
-public class KitData {
+public class KitData implements Cloneable {
 
     public static class InvalidIntegerException extends Exception {
         public InvalidIntegerException(String message) {
             super(message);
         }
     }
+
     private String configPath;
 
     @Getter
@@ -81,8 +81,6 @@ public class KitData {
         }else{
             if(createIfDoesNotExist){
                 this.kitName = kitName;
-                this.configPath = path;
-                saveChanges();
             } else return false;
         }
         this.configPath = path;
@@ -124,7 +122,7 @@ public class KitData {
         this.yKnockbackAmount = yamlData.getDouble("yKnockbackAmount", 0.3);
     }
 
-    public void saveChanges(){
+    protected void saveChanges(SaveHandler saveHandler){
         YamlConfiguration yamlData = new YamlConfiguration();
         yamlData.set("knockbackMultiplier", knockbackMultiplier);
         yamlData.set("maxNoDamageTicks", maxNoDamageTicks);
@@ -133,21 +131,25 @@ public class KitData {
         yamlData.set("maxKnockbackSpeedMultiplier", knockbackMultiplier);
         yamlData.set("yKnockbackAmount", yKnockbackAmount);
         String data = yamlData.saveToString();
-        Logger log = DuelsCombo.getInstance().getLogger();
-        new BukkitRunnable() {
+        saveHandler.saveBytes(data.getBytes(), Paths.get(configPath), new SaveCallback() {
             @Override
             public void run() {
-                try{
-                    Files.write(Paths.get(configPath), data.getBytes());
-                }
-                catch(Exception ex){
+                if(exception != null) {
+                    Logger log = DuelsCombo.getInstance().getLogger();
                     log.severe("Exception while writing file:");
-                    log.severe(ex.getMessage());
-                    log.severe(Arrays.toString(ex.getStackTrace()));
+                    log.severe(exception.getMessage());
+                    log.severe(Arrays.toString(exception.getStackTrace()));
                 }
             }
-        }.runTaskAsynchronously(DuelsCombo.getInstance());
+        });
     }
 
-
+    @Override
+    public KitData clone() {
+        try {
+            return (KitData) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
 }

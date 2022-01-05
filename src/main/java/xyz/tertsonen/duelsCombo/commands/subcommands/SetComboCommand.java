@@ -79,7 +79,7 @@ public class SetComboCommand extends Command {
             }
             kitData.setMaxNoDamageTicks(noDamageTicks);
             kitData.setCombo(isComboDuel);
-            kitData.saveChanges();
+            plugin.getSaveDataManager().saveChanges(kitData);
             plugin.getLang().sendTo(sender, plugin.getLang().getSetOptionsSuccess(), true);
         }
         catch(Exception ex){

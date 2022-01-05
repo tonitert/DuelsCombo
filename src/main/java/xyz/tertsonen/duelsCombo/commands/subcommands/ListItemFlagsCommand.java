@@ -17,7 +17,7 @@ public class ListItemFlagsCommand extends Command {
     Duels duelsAPI;
     DuelsCombo plugin;
     public ListItemFlagsCommand(final DuelsCombo plugin, final Duels api){
-        super(plugin, api, "listitemflags", "listitemflags", plugin.getLang().getSetOptionsDesc(),1, false);
+        super(plugin, api, "listitemflags", "listitemflags", plugin.getLang().getListItemFlagsDesc(),1, false);
         this.duelsAPI = api;
         this.plugin = plugin;
     }

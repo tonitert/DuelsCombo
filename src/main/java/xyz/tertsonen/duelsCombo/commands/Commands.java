@@ -6,10 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import xyz.tertsonen.duelsCombo.DuelsCombo;
 import xyz.tertsonen.duelsCombo.Lang;
-import xyz.tertsonen.duelsCombo.commands.subcommands.ListCommand;
-import xyz.tertsonen.duelsCombo.commands.subcommands.ListFlagsCommand;
-import xyz.tertsonen.duelsCombo.commands.subcommands.SetComboCommand;
-import xyz.tertsonen.duelsCombo.commands.subcommands.SetFlagCommand;
+import xyz.tertsonen.duelsCombo.commands.subcommands.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +23,8 @@ public class Commands extends SubCommand {
                 new SetComboCommand(plugin, api),
                 new ListCommand(plugin, api),
                 new SetFlagCommand(plugin, api),
-                new ListFlagsCommand(plugin, api)
+                new ListFlagsCommand(plugin, api),
+                new ListItemFlagsCommand(plugin, api)
         );
 
     }
@@ -38,16 +36,12 @@ public class Commands extends SubCommand {
     @Override
     public void execute(final CommandSender sender, final String label, final String[] args) {
         if(args.length == getLength()){
-            lang.sendTo(sender, lang.getHelpHeader(), true);
-            subCommands.values().forEach(command -> lang.sendTo(sender, label + " " + args[0] + " " + command.getUsage() + "\n" + command.getDescription(), false));
-            lang.sendTo(sender, lang.getHelpFooter(), true);
+            sendUsage(sender, label, args);
             return;
         }
         final Command command = subCommands.get(args[1].toLowerCase());
         if(command == null){
-            lang.sendTo(sender, lang.getHelpHeader(), true);
-            subCommands.values().forEach(cmd -> lang.sendTo(sender, label + " " + args[0] + " " + cmd.getUsage() + "\n" + cmd.getDescription(), false));
-            lang.sendTo(sender, lang.getHelpFooter(), true);
+            sendUsage(sender, label, args);
             return;
         }
         if (command.isPlayerOnly() && !(sender instanceof Player)) {
@@ -60,5 +54,11 @@ public class Commands extends SubCommand {
         }
         command.execute(sender, label, args);
 
+    }
+
+    private void sendUsage(CommandSender sender, String label, String[] args) {
+        lang.sendTo(sender, lang.getHelpHeader(), true);
+        subCommands.values().forEach(cmd -> lang.sendTo(sender, label + " " + args[0] + " " + cmd.getUsage() + "\n" + cmd.getDescription()+ "\n", false));
+        lang.sendTo(sender, lang.getHelpFooter(), true);
     }
 }

@@ -10,7 +10,6 @@ import java.nio.file.Files;
 import java.util.Objects;
 
 public class SaveDataManagerTest {
-
 	private final SaveHandler mockSaveHandler = (bytes, path, saveCallback) -> {
 		try{
 			Files.write(path, bytes);

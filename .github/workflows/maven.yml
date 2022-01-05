@@ -24,8 +24,6 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -DskipTests -B package --file pom.xml
-    - name: Run tests
-      run: mvn --update-snapshots verify
     - run: mkdir staging && cp target/*.jar staging
     - uses: actions/upload-artifact@v2
       with:

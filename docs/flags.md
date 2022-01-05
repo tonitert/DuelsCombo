@@ -17,3 +17,4 @@ Flags can have different data types, which control what values can be set to the
 * **projectile-velocity-multiplier**: Multiplier for the velocity of the shot projectile. Data type: double
 * **projectile-explosion-size**: Size of the explosion created when the projectile hits an obstacle. If set to 0, no explosion will be created. Data type: double
 * **projectile-explosion-destroy-blocks**: Whether to make the projectile explosion destroy blocks. Data type: bool
+* **projectile-push-amount** Amount of pushing force to apply to the hit entity, when this item shoots a projectile. Data type: double

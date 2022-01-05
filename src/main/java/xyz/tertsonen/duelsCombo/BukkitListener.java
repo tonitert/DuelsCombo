@@ -62,13 +62,48 @@ public class BukkitListener implements Listener {
 
 	@EventHandler
 	private void onProjectileHit(ProjectileHitEvent e){
-		Double kb = e.getEntity().getPersistentDataContainer().get(ItemFlag.SHOOTER_BOW_KNOCKBACK.getNamespacedKey(), PersistentDataType.DOUBLE);
 		ProjectileSource shooterSource = e.getEntity().getShooter();
+		if(!(shooterSource instanceof LivingEntity)) return;
+		Entity hitEntity = e.getHitEntity();
+		Entity shooter = (Entity) shooterSource;
+
+		if(hitEntity != null){
+			Projectile projectile = e.getEntity();
+			Short val = projectile.getPersistentDataContainer().get(ItemFlag.SWITCH_POSITIONS_ON_HIT.getNamespacedKey(), PersistentDataType.SHORT);
+			if(val != null && val == ((short) 1)){
+				new BukkitRunnable(){
+					@Override
+					public void run() {
+						Location l2 = hitEntity.getLocation();
+						Location oldHitEntityLoc = new Location(l2.getWorld(), l2.getX(), l2.getY(), l2.getZ());
+						Location l3 = shooter.getLocation();
+						Location shooterLoc = new Location(l3.getWorld(), l3.getX(), l3.getY(), l3.getZ());
+						hitEntity.teleport(shooterLoc);
+						shooter.teleport(oldHitEntityLoc);
+					}
+				}.runTaskLater(DuelsCombo.getInstance(), 1L);
+			}
+		}
+
 		if(!(shooterSource instanceof Player)) return;
-		Player shooter = (Player) shooterSource;
-		if(kb != null){
+		Double kb = e.getEntity().getPersistentDataContainer().get(ItemFlag.SHOOTER_BOW_KNOCKBACK.getNamespacedKey(), PersistentDataType.DOUBLE);
+		Double hitEntityPush = e.getEntity().getPersistentDataContainer().get(ItemFlag.PROJECTILE_PUSH_AMOUNT.getNamespacedKey(), PersistentDataType.DOUBLE);
+		if(hitEntity != null && hitEntityPush != null && hitEntityPush != 0){
+			Vector newVel = hitEntity.getLocation().toVector().subtract(shooter.getLocation().toVector()).multiply(hitEntityPush);
+			// Cap velocity to a sensible amount to avoid server crashes
+			if(newVel.length() > 50) {
+				newVel.normalize().multiply(50);
+			}
+			hitEntity.setVelocity(newVel);
+			Utils.sendVelocityPacket((Player) shooter);
+			if(hitEntity instanceof Player) {
+				Utils.sendVelocityPacket((Player) hitEntity);
+			}
+		}
+
+		if(kb != null && kb != 0){
 			Location projLoc = e.getEntity().getLocation();
-			players.put(shooter, new LaunchData(projLoc, kb));
+			players.put((Player) shooter, new LaunchData(projLoc, kb));
 			new BukkitRunnable(){
 				@Override
 				public void run() {
@@ -82,27 +117,6 @@ public class BukkitListener implements Listener {
 		if(explosionSize != null && explosionSize != 0d){
 			boolean breakBlocks = ItemFlag.getBool(ItemFlag.PROJECTILE_EXPLOSION_DESTROY_BLOCKS, e.getEntity());
 			e.getEntity().getWorld().createExplosion(e.getEntity().getLocation(), (float) (double) explosionSize, false, breakBlocks);
-		}
-
-		if(e.getEntity() instanceof Arrow){
-			Entity hitEntity = e.getHitEntity();
-			if(hitEntity != null){
-				Arrow arrow = (Arrow) e.getEntity();
-				Short val = arrow.getPersistentDataContainer().get(ItemFlag.SWITCH_POSITIONS_ON_HIT.getNamespacedKey(), PersistentDataType.SHORT);
-				if(val != null && val == ((short) 1)){
-					new BukkitRunnable(){
-						@Override
-						public void run() {
-							Location l2 = hitEntity.getLocation();
-							Location oldHitEntityLoc = new Location(l2.getWorld(), l2.getX(), l2.getY(), l2.getZ());
-							Location l3 = shooter.getLocation();
-							Location shooterLoc = new Location(l3.getWorld(), l3.getX(), l3.getY(), l3.getZ());
-							hitEntity.teleport(shooterLoc);
-							shooter.teleport(oldHitEntityLoc);
-						}
-					}.runTaskLater(DuelsCombo.getInstance(), 1L);
-				}
-			}
 		}
 	}
 

@@ -39,14 +39,14 @@ public class Commands extends SubCommand {
     public void execute(final CommandSender sender, final String label, final String[] args) {
         if(args.length == getLength()){
             lang.sendTo(sender, lang.getHelpHeader(), true);
-            subCommands.values().forEach(command -> lang.sendTo(sender, label + " " + args[0] + " " + command.getUsage() + "\n" + command.getDescription(), true));
+            subCommands.values().forEach(command -> lang.sendTo(sender, label + " " + args[0] + " " + command.getUsage() + "\n" + command.getDescription(), false));
             lang.sendTo(sender, lang.getHelpFooter(), true);
             return;
         }
         final Command command = subCommands.get(args[1].toLowerCase());
         if(command == null){
             lang.sendTo(sender, lang.getHelpHeader(), true);
-            subCommands.values().forEach(cmd -> lang.sendTo(sender, label + " " + args[0] + " " + cmd.getUsage() + "\n" + cmd.getDescription(), true));
+            subCommands.values().forEach(cmd -> lang.sendTo(sender, label + " " + args[0] + " " + cmd.getUsage() + "\n" + cmd.getDescription(), false));
             lang.sendTo(sender, lang.getHelpFooter(), true);
             return;
         }

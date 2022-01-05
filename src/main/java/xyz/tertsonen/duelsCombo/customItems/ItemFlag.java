@@ -17,6 +17,10 @@ public enum ItemFlag {
 	 */
 	SHOOTER_BOW_KNOCKBACK("shooterBowKnockback", "projectile-shooter-knockback", DataType.DOUBLE, true),
 	/**
+	 * The speed at which the hit entity will be pushed.
+	 */
+	PROJECTILE_PUSH_AMOUNT("projectilePushAmount", "projectile-push-amount", DataType.DOUBLE, true),
+	/**
 	 * Whether to switch player positions on projectile hit.
 	 */
 	SWITCH_POSITIONS_ON_HIT("switchPositionsOnHit", "switch-positions-on-projectile-hit", DataType.BOOL, true),

@@ -75,12 +75,15 @@ public class SaveDataManager {
             try{
                 if(!kitsFolder.mkdir()){
                     DuelsCombo.getInstance().getLogger().severe("Couldn't create kit folder.");
+                    return;
                 }
             }
             catch (Exception e){
                 DuelsCombo.getInstance().getLogger().severe("Couldn't create kit folder: ");
                 e.printStackTrace();
+                return;
             }
+            kitsFolderCreated = true;
             return;
         }
         kitsFolderCreated = true;

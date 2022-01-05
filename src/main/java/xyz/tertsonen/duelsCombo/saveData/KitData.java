@@ -66,7 +66,7 @@ public class KitData {
      * @param kitName kit name, name in already existing kit is preferred over this
      * @return true if succeeded
      */
-    protected boolean loadOrCreateKit(@NotNull String path, String kitName, boolean createIfDoesntExist){
+    protected boolean loadOrCreateKit(@NotNull String path, String kitName, boolean createIfDoesNotExist){
         if(!path.endsWith(".yml")){
             return false;
         }
@@ -79,11 +79,11 @@ public class KitData {
                 return false;
             }
         }else{
-            if(createIfDoesntExist){
+            if(createIfDoesNotExist){
                 this.kitName = kitName;
                 this.configPath = path;
                 saveChanges();
-            }else return false;
+            } else return false;
         }
         this.configPath = path;
         loaded = true;

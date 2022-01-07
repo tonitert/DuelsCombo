@@ -9,6 +9,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import xyz.tertsonen.duelsCombo.DuelsCombo;
 import xyz.tertsonen.duelsCombo.commands.Command;
+import xyz.tertsonen.duelsCombo.customItems.Bool;
 import xyz.tertsonen.duelsCombo.customItems.ItemFlag;
 
 public class SetFlagCommand extends Command {
@@ -32,7 +33,7 @@ public class SetFlagCommand extends Command {
 			return;
 		}
 
-		ItemFlag flag = ItemFlag.getByUserFriendlyName(args[2]);
+		ItemFlag<?> flag = ItemFlag.getByUserFriendlyName(args[2]);
 		if(flag == null){
 			plugin.getLang().sendTo(sender, plugin.getLang().getInvalidFlag());
 			return;
@@ -52,26 +53,23 @@ public class SetFlagCommand extends Command {
 		}
 
 		try{
-			switch (flag.getType()){
-				case BOOL:
-					boolean bool = Boolean.parseBoolean(args[3]);
-					if(bool){
-						itemMeta.getPersistentDataContainer().set(flag.getNamespacedKey(), PersistentDataType.SHORT, (short) 1);
-					}else{
-						Short val = itemMeta.getPersistentDataContainer().get(flag.getNamespacedKey(), PersistentDataType.SHORT);
-						if(val != null){
-							itemMeta.getPersistentDataContainer().remove(flag.getNamespacedKey());
-						}
+			PersistentDataType<?,?> type = flag.getType();
+			if(type.equals(Bool.BOOL)){
+				boolean bool = Boolean.parseBoolean(args[3]);
+				if(bool){
+					itemMeta.getPersistentDataContainer().set(flag.getNamespacedKey(), PersistentDataType.SHORT, (short) 1);
+				}else{
+					Short val = itemMeta.getPersistentDataContainer().get(flag.getNamespacedKey(), PersistentDataType.SHORT);
+					if(val != null){
+						itemMeta.getPersistentDataContainer().remove(flag.getNamespacedKey());
 					}
-					break;
-				case DOUBLE:
-					Double dbl = Double.parseDouble(args[3]);
-					itemMeta.getPersistentDataContainer().set(flag.getNamespacedKey(), PersistentDataType.DOUBLE, dbl);
-					break;
-				case INT:
-					Integer integer = Integer.parseInt(args[3]);
-					itemMeta.getPersistentDataContainer().set(flag.getNamespacedKey(), PersistentDataType.INTEGER, integer);
-					break;
+				}
+			}else if(type.equals(PersistentDataType.DOUBLE)){
+				Double dbl = Double.parseDouble(args[3]);
+				itemMeta.getPersistentDataContainer().set(flag.getNamespacedKey(), PersistentDataType.DOUBLE, dbl);
+			} else if(type.equals(PersistentDataType.INTEGER)){
+				Integer integer = Integer.parseInt(args[3]);
+				itemMeta.getPersistentDataContainer().set(flag.getNamespacedKey(), PersistentDataType.INTEGER, integer);
 			}
 		}
 		catch (NumberFormatException e){

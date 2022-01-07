@@ -10,60 +10,69 @@ import xyz.tertsonen.duelsCombo.DuelsCombo;
 
 import java.util.HashMap;
 
-public enum ItemFlag {
+public class ItemFlag<T> {
 
 	/**
 	 * Amount of knockback to give to the shooter of the bow. Useful for grappling hook bows.
 	 */
-	SHOOTER_BOW_KNOCKBACK("shooterBowKnockback", "projectile-shooter-knockback", DataType.DOUBLE, true),
+	public static ItemFlag<Double> SHOOTER_BOW_KNOCKBACK = new ItemFlag<>("shooterBowKnockback", "projectile-shooter-knockback", PersistentDataType.DOUBLE, true);
 	/**
 	 * The speed at which the hit entity will be pushed.
 	 */
-	PROJECTILE_PUSH_AMOUNT("projectilePushAmount", "projectile-push-amount", DataType.DOUBLE, true),
+	public static ItemFlag<Double> PROJECTILE_PUSH_AMOUNT = new ItemFlag<>("projectilePushAmount", "projectile-push-amount", PersistentDataType.DOUBLE, true);
 	/**
 	 * Whether to switch player positions on projectile hit.
 	 */
-	SWITCH_POSITIONS_ON_HIT("switchPositionsOnHit", "switch-positions-on-projectile-hit", DataType.BOOL, true),
+	public static ItemFlag<Boolean> SWITCH_POSITIONS_ON_HIT = new ItemFlag<>("switchPositionsOnHit", "switch-positions-on-projectile-hit", Bool.BOOL, true);
 	/**
 	 * Whether to make the bow shoot instantly, like in Beta 1.8.
 	 */
-	BOW_INSTANT_SHOOT("bowInstantShoot", "bow-instant-shoot", DataType.BOOL, false),
+	public static ItemFlag<Boolean> BOW_INSTANT_SHOOT = new ItemFlag<>("bowInstantShoot", "bow-instant-shoot", Bool.BOOL, false);
 	/**
 	 * Cooldown between bow shots.
 	 */
-	TIME_BETWEEN_BOW_SHOTS("timeBetweenBowShots", "time-between-bow-shots", DataType.INT, false),
-	PROJECTILE_VELOCITY_MULTIPLIER("projectileVelocityMultiplier", "projectile-velocity-multiplier", DataType.DOUBLE, false),
-	PROJECTILE_EXPLOSION_SIZE("arrowExplosionSize", "projectile-explosion-size", DataType.DOUBLE, true),
-	PROJECTILE_EXPLOSION_DESTROY_BLOCKS("projectileExplosionDestroyBlocks", "projectile-explosion-destroy-blocks", DataType.BOOL, true);
+	public static ItemFlag<Integer> TIME_BETWEEN_BOW_SHOTS = new ItemFlag<>("timeBetweenBowShots", "time-between-bow-shots", PersistentDataType.INTEGER, false);
+	public static ItemFlag<Double> PROJECTILE_VELOCITY_MULTIPLIER = new ItemFlag<>("projectileVelocityMultiplier", "projectile-velocity-multiplier", PersistentDataType.DOUBLE, false);
+	public static ItemFlag<Double> PROJECTILE_EXPLOSION_SIZE = new ItemFlag<>("arrowExplosionSize", "projectile-explosion-size", PersistentDataType.DOUBLE, true);
+	public static ItemFlag<Boolean> PROJECTILE_EXPLOSION_DESTROY_BLOCKS = new ItemFlag<>("projectileExplosionDestroyBlocks", "projectile-explosion-destroy-blocks", Bool.BOOL, true);
 
 	@Getter
 	private final String key;
 	@Getter
 	private final String userFriendlyName;
 	@Getter
-	private final DataType type;
+	private final PersistentDataType<T, T> type;
 	@Getter
 	private final boolean projectileFlag;
 
-	private static final HashMap<String, ItemFlag> lookup = new HashMap<>();
-	private static HashMap<NamespacedKey, ItemFlag> namespacedKeyLookup = null;
+	private static final HashMap<String, ItemFlag<?>> lookup = new HashMap<>();
+	private static HashMap<NamespacedKey, ItemFlag<?>> namespacedKeyLookup = null;
+
+	public static final ItemFlag<?>[] VALUES = {SHOOTER_BOW_KNOCKBACK,
+			PROJECTILE_PUSH_AMOUNT,
+			SWITCH_POSITIONS_ON_HIT,
+			BOW_INSTANT_SHOOT,
+			TIME_BETWEEN_BOW_SHOTS,
+			PROJECTILE_VELOCITY_MULTIPLIER,
+			PROJECTILE_EXPLOSION_SIZE,
+			PROJECTILE_EXPLOSION_DESTROY_BLOCKS};
 
 	static {
-		for (ItemFlag value : ItemFlag.values()) {
+		for (ItemFlag<?> value : VALUES) {
 			lookup.put(value.getUserFriendlyName(), value);
 		}
 	}
 
 	@Nullable
-	public static ItemFlag getByUserFriendlyName(String userFriendlyName){
+	public static ItemFlag<?> getByUserFriendlyName(String userFriendlyName){
 		return lookup.get(userFriendlyName);
 	}
 
 	@Nullable
-	public static ItemFlag getByNameSpacedKey(NamespacedKey namespacedKey){
+	public static ItemFlag<?> getByNameSpacedKey(NamespacedKey namespacedKey){
 		if(namespacedKeyLookup == null){
 			namespacedKeyLookup = new HashMap<>();
-			for (ItemFlag value : ItemFlag.values()) {
+			for (ItemFlag<?> value : VALUES) {
 				namespacedKeyLookup.put(value.getNamespacedKey(), value);
 			}
 		}
@@ -78,26 +87,15 @@ public enum ItemFlag {
 		return nKey;
 	}
 
-	ItemFlag(String key, String userFriendlyName, DataType type, boolean projectileFlag){
+	ItemFlag(String key, String userFriendlyName, PersistentDataType<T,T> dataType, boolean projectileFlag){
 		this.key = key;
 		this.userFriendlyName = userFriendlyName;
-		this.type = type;
+		this.type = dataType;
 		this.projectileFlag = projectileFlag;
 	}
 
-	public static boolean getBool(@NotNull ItemFlag itemFlag, PersistentDataHolder dataHolder) {
-		if(itemFlag.getType() != DataType.BOOL) return false;
-		Short val = dataHolder.getPersistentDataContainer().get(itemFlag.getNamespacedKey(), PersistentDataType.SHORT);
-		return val != null && val == (short) 1;
-	}
-
-	public static @Nullable Double getDouble(@NotNull ItemFlag itemFlag, PersistentDataHolder dataHolder) {
-		if(itemFlag.getType() != DataType.DOUBLE) return null;
-		return dataHolder.getPersistentDataContainer().get(itemFlag.getNamespacedKey(), PersistentDataType.DOUBLE);
-	}
-
-	public static @Nullable Integer getInt(@NotNull ItemFlag itemFlag, PersistentDataHolder dataHolder) {
-		if(itemFlag.getType() != DataType.INT) return null;
-		return dataHolder.getPersistentDataContainer().get(itemFlag.getNamespacedKey(), PersistentDataType.INTEGER);
+	@Nullable
+	public T getValue(@NotNull PersistentDataHolder holder){
+		return holder.getPersistentDataContainer().get(getNamespacedKey(), type);
 	}
 }

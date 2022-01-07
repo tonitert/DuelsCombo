@@ -6,6 +6,7 @@ import xyz.tertsonen.duelsCombo.DuelsCombo;
 import xyz.tertsonen.duelsCombo.commands.Command;
 import xyz.tertsonen.duelsCombo.customItems.ItemFlag;
 
+import java.util.Locale;
 import java.util.logging.Level;
 
 public class ListFlagsCommand extends Command {
@@ -20,8 +21,12 @@ public class ListFlagsCommand extends Command {
     public void execute(CommandSender sender, String label, String[] args) {
         try{
             DuelsCombo.getInstance().getLang().sendTo(sender, DuelsCombo.getInstance().getLang().getFlagsHeader(), false);
-            for (ItemFlag flag : ItemFlag.values()) {
-                DuelsCombo.getInstance().getLang().sendTo(sender, String.format(DuelsCombo.getInstance().getLang().getFlagFormat(), flag.getUserFriendlyName(), flag.getType().toString().toLowerCase()), false);
+            for (ItemFlag<?> flag : ItemFlag.VALUES) {
+                /*
+                    TODO: showing the class name to the user is not a good long term solution for implementing types for flags,
+                     a wrapper class for PersistentDataType could be better
+                 */
+                DuelsCombo.getInstance().getLang().sendTo(sender, String.format(DuelsCombo.getInstance().getLang().getFlagFormat(), flag.getUserFriendlyName(), flag.getType().getPrimitiveType().getSimpleName().toLowerCase(Locale.ROOT)), false);
             }
             DuelsCombo.getInstance().getLang().sendTo(sender, DuelsCombo.getInstance().getLang().getFlagsFooter(), false);
         }

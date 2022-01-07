@@ -55,9 +55,9 @@ public class BukkitListener implements Listener {
 		Utils.passBowFlags(e.getBow(), e.getProjectile());
 		if(!(e.getEntity() instanceof Player)) return;
 		Player player = (Player) e.getEntity();
+		if(player.getInventory().getItemInMainHand().getItemMeta() == null) return;
 		setCanFire(
-				ItemFlag.getInt(ItemFlag.TIME_BETWEEN_BOW_SHOTS, player.getInventory().getItemInMainHand().getItemMeta()),
-				player);
+				ItemFlag.TIME_BETWEEN_BOW_SHOTS.getValue(player.getInventory().getItemInMainHand().getItemMeta()), player);
 	}
 
 	@EventHandler
@@ -113,9 +113,9 @@ public class BukkitListener implements Listener {
 				}
 			}.runTaskLater(DuelsCombo.getInstance(), /* 30 seconds */30 * 20L);
 		}
-		Double explosionSize = ItemFlag.getDouble(ItemFlag.PROJECTILE_EXPLOSION_SIZE, e.getEntity());
+		Double explosionSize = ItemFlag.PROJECTILE_EXPLOSION_SIZE.getValue(e.getEntity());
 		if(explosionSize != null && explosionSize != 0d){
-			boolean breakBlocks = ItemFlag.getBool(ItemFlag.PROJECTILE_EXPLOSION_DESTROY_BLOCKS, e.getEntity());
+			boolean breakBlocks = Boolean.TRUE.equals(ItemFlag.PROJECTILE_EXPLOSION_DESTROY_BLOCKS.getValue(e.getEntity()));
 			e.getEntity().getWorld().createExplosion(e.getEntity().getLocation(), (float) (double) explosionSize, false, breakBlocks);
 		}
 	}
@@ -135,9 +135,10 @@ public class BukkitListener implements Listener {
 				e.setUseItemInHand(Event.Result.DENY);
 				return;
 			}
-			if(!ItemFlag.getBool(ItemFlag.BOW_INSTANT_SHOOT, e.getItem().getItemMeta())) return;
+			Boolean val = ItemFlag.BOW_INSTANT_SHOOT.getValue(e.getItem().getItemMeta());
+			if(val == null || !val) return;
 			e.setUseItemInHand(Event.Result.DENY);
-			Integer cd = ItemFlag.getInt(ItemFlag.TIME_BETWEEN_BOW_SHOTS, e.getItem().getItemMeta());
+			Integer cd = ItemFlag.TIME_BETWEEN_BOW_SHOTS.getValue(e.getItem().getItemMeta());
 			if(!canFire.containsKey(p)){
 				Material arrow = Utils.takeFirstArrow(p, !(p.getGameMode() == GameMode.CREATIVE ||
 						e.getItem().getEnchantmentLevel(Enchantment.ARROW_INFINITE) != 0));

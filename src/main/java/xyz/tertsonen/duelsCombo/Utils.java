@@ -118,17 +118,18 @@ public class Utils {
 		String pluginName = DuelsCombo.getInstance().getName().toLowerCase(Locale.ROOT);
 		for (NamespacedKey key : cont.getKeys()) {
 			if(!key.getNamespace().equals(pluginName)) continue;
-			ItemFlag flag = ItemFlag.getByNameSpacedKey(key);
+			ItemFlag<T> flag = (ItemFlag<T>) ItemFlag.getByNameSpacedKey(key);
 			if(flag == null) continue;
 			if(flag.isProjectileFlag()){
-				PersistentDataType<T,T> type = (PersistentDataType<T, T>) flag.getType().dataType;
+				PersistentDataType<T,T> type = flag.getType();
 				entityCont.set(key, type, Objects.requireNonNull(cont.get(key, type)));
 			}
 		}
 	}
 
 	static void setProjectileSpeedFromMultiplier(@NotNull ItemStack item, @NotNull Entity projectile){
-		Double mul = ItemFlag.getDouble(ItemFlag.PROJECTILE_VELOCITY_MULTIPLIER, item.getItemMeta());
+		if(item.getItemMeta() == null) return;
+		Double mul = ItemFlag.PROJECTILE_VELOCITY_MULTIPLIER.getValue(item.getItemMeta());
 		mul = mul == null ? 1d : mul;
 		projectile.setVelocity(projectile.getVelocity().multiply(mul));
 	}

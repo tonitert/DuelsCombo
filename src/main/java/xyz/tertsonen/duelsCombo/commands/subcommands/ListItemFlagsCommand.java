@@ -40,9 +40,9 @@ public class ListItemFlagsCommand extends Command {
             toSend.append(DuelsCombo.getInstance().getLang().getFlagsHeader()).append('\n');
             boolean hasKeys = false;
             for (NamespacedKey key : cont.getKeys()) {
-                ItemFlag flag = ItemFlag.getByNameSpacedKey(key);
+                ItemFlag<?> flag = ItemFlag.getByNameSpacedKey(key);
                 if(flag == null) continue;
-                Object val = cont.get(key, (PersistentDataType<?, ?>) flag.getType().dataType);
+                Object val = cont.get(key, (PersistentDataType<?, ?>) flag.getType());
                 if(val == null) continue;
                 hasKeys = true;
                 toSend.append(String.format(plugin.getLang().getItemFlagFormat(),

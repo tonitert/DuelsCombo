@@ -39,11 +39,9 @@ public class DuelsCombo extends JavaPlugin {
             return;
         }
         saveDataManager = new SaveDataManager(getDataFolder(), duelsAPI.getKitManager(), new SaveHandlerImpl());
-        if(matchStartManager == null){
-            matchStartManager = new MatchStartManager();
-            bukkitListener = new BukkitListener();
-            duelsAPI.registerSubCommand("duels", new Commands(this,duelsAPI));
-        }
+        matchStartManager = new MatchStartManager();
+        bukkitListener = new BukkitListener();
+        duelsAPI.registerSubCommand("duels", new Commands(this,duelsAPI));
         active = true;
         protocolManager = ProtocolLibrary.getProtocolManager();
     }

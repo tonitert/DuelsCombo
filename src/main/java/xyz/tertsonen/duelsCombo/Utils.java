@@ -6,6 +6,7 @@ import me.realized.duels.api.Duels;
 import me.realized.duels.api.kit.Kit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -110,7 +111,7 @@ public class Utils {
 	}
 
 	@SuppressWarnings("unchecked")
-	static <T> void passBowFlags(ItemStack bow, Entity firedProjectile){
+	static <T> void passBowFlags(@NotNull ItemStack bow, Entity firedProjectile){
 		if(bow.getItemMeta() == null) return;
 		ItemMeta meta = bow.getItemMeta();
 		PersistentDataContainer cont = meta.getPersistentDataContainer();
@@ -121,7 +122,7 @@ public class Utils {
 			ItemFlag<T> flag = (ItemFlag<T>) ItemFlag.getByNameSpacedKey(key);
 			if(flag == null) continue;
 			if(flag.isProjectileFlag()){
-				PersistentDataType<T,T> type = flag.getType();
+				PersistentDataType<?,T> type = flag.getType();
 				entityCont.set(key, type, Objects.requireNonNull(cont.get(key, type)));
 			}
 		}
@@ -132,5 +133,19 @@ public class Utils {
 		Double mul = ItemFlag.PROJECTILE_VELOCITY_MULTIPLIER.getValue(item.getItemMeta());
 		mul = mul == null ? 1d : mul;
 		projectile.setVelocity(projectile.getVelocity().multiply(mul));
+	}
+
+	static void setLaunchedProjectileSpread(ItemStack item, Entity shooter, Entity projectile){
+		if(item.getItemMeta() == null) return;
+		Double mul = ItemFlag.PROJECTILE_LAUNCH_DIRECTION_RANDOMNESS_MULTIPLIER.getValue(item.getItemMeta());
+		if(mul != null && mul != 1d) {
+			if(mul != 0d){
+				Arrow tmpArrow = shooter.getWorld().spawnArrow(projectile.getLocation(), shooter.getLocation().getDirection(), (float) projectile.getVelocity().length(), 12 * mul.floatValue());
+				projectile.setVelocity(tmpArrow.getVelocity());
+				tmpArrow.remove();
+			}else{
+				projectile.setVelocity(shooter.getLocation().getDirection().multiply(projectile.getVelocity().length()));
+			}
+		}
 	}
 }

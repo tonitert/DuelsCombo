@@ -12,6 +12,12 @@ import java.util.HashMap;
 
 public class ItemFlag<T> {
 
+	/*
+	 * key: the key used for saving the flags in the NBT data
+	 * userFriendlyName: the flag name shown to the player
+	 * projectileFlag: whether to pass the flag to a launched projectile
+	 */
+
 	/**
 	 * Amount of knockback to give to the shooter of the bow. Useful for grappling hook bows.
 	 */
@@ -38,27 +44,34 @@ public class ItemFlag<T> {
 	 */
 	public static ItemFlag<Double> PROJECTILE_EXPLOSION_SIZE = new ItemFlag<>("arrowExplosionSize", "projectile-explosion-size", PersistentDataType.DOUBLE, true);
 	public static ItemFlag<Boolean> PROJECTILE_EXPLOSION_DESTROY_BLOCKS = new ItemFlag<>("projectileExplosionDestroyBlocks", "projectile-explosion-destroy-blocks", Bool.BOOL, true);
+	/**
+	 * Multiplier for the amount of randomness the server adds to bows by default.
+	 */
+	public static ItemFlag<Double> PROJECTILE_LAUNCH_DIRECTION_RANDOMNESS_MULTIPLIER = new ItemFlag<>("projectileSpread", "projectile-direction-randomness-multiplier", PersistentDataType.DOUBLE, false);
 
 	@Getter
 	private final String key;
 	@Getter
 	private final String userFriendlyName;
 	@Getter
-	private final PersistentDataType<T, T> type;
+	private final PersistentDataType<?, T> type;
 	@Getter
 	private final boolean projectileFlag;
 
 	private static final HashMap<String, ItemFlag<?>> lookup = new HashMap<>();
 	private static HashMap<NamespacedKey, ItemFlag<?>> namespacedKeyLookup = null;
 
-	public static final ItemFlag<?>[] VALUES = {SHOOTER_BOW_KNOCKBACK,
+	public static final ItemFlag<?>[] VALUES = {
+			SHOOTER_BOW_KNOCKBACK,
 			PROJECTILE_PUSH_AMOUNT,
 			SWITCH_POSITIONS_ON_HIT,
 			BOW_INSTANT_SHOOT,
 			TIME_BETWEEN_BOW_SHOTS,
 			PROJECTILE_VELOCITY_MULTIPLIER,
 			PROJECTILE_EXPLOSION_SIZE,
-			PROJECTILE_EXPLOSION_DESTROY_BLOCKS};
+			PROJECTILE_EXPLOSION_DESTROY_BLOCKS,
+			PROJECTILE_LAUNCH_DIRECTION_RANDOMNESS_MULTIPLIER
+	};
 
 	static {
 		for (ItemFlag<?> value : VALUES) {
@@ -90,7 +103,7 @@ public class ItemFlag<T> {
 		return nKey;
 	}
 
-	ItemFlag(String key, String userFriendlyName, PersistentDataType<T,T> dataType, boolean projectileFlag){
+	ItemFlag(String key, String userFriendlyName, PersistentDataType<?,T> dataType, boolean projectileFlag){
 		this.key = key;
 		this.userFriendlyName = userFriendlyName;
 		this.type = dataType;

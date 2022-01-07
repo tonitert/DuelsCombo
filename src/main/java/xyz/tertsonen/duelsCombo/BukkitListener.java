@@ -53,11 +53,12 @@ public class BukkitListener implements Listener {
 		if(e.getBow() == null) return;
 		Utils.setProjectileSpeedFromMultiplier(e.getBow(), e.getProjectile());
 		Utils.passBowFlags(e.getBow(), e.getProjectile());
-		if(!(e.getEntity() instanceof Player)) return;
-		Player player = (Player) e.getEntity();
-		if(player.getInventory().getItemInMainHand().getItemMeta() == null) return;
-		setCanFire(
-				ItemFlag.TIME_BETWEEN_BOW_SHOTS.getValue(player.getInventory().getItemInMainHand().getItemMeta()), player);
+		if(e.getEntity() instanceof Player) {
+			Player player = (Player) e.getEntity();
+			if(player.getInventory().getItemInMainHand().getItemMeta() == null) return;
+			setCanFire(ItemFlag.TIME_BETWEEN_BOW_SHOTS.getValue(player.getInventory().getItemInMainHand().getItemMeta()), player);
+		}
+		Utils.setLaunchedProjectileSpread(e.getBow(), e.getEntity(), e.getProjectile());
 	}
 
 	@EventHandler
@@ -67,6 +68,7 @@ public class BukkitListener implements Listener {
 		Entity hitEntity = e.getHitEntity();
 		Entity shooter = (Entity) shooterSource;
 
+		// SWITCH_POSITIONS_ON_HIT
 		if(hitEntity != null){
 			Projectile projectile = e.getEntity();
 			Short val = projectile.getPersistentDataContainer().get(ItemFlag.SWITCH_POSITIONS_ON_HIT.getNamespacedKey(), PersistentDataType.SHORT);
@@ -85,6 +87,7 @@ public class BukkitListener implements Listener {
 			}
 		}
 
+		// PROJECTILE_PUSH_AMOUNT & SHOOTER_BOW_KNOCKBACK
 		if(!(shooterSource instanceof Player)) return;
 		Double kb = e.getEntity().getPersistentDataContainer().get(ItemFlag.SHOOTER_BOW_KNOCKBACK.getNamespacedKey(), PersistentDataType.DOUBLE);
 		Double hitEntityPush = e.getEntity().getPersistentDataContainer().get(ItemFlag.PROJECTILE_PUSH_AMOUNT.getNamespacedKey(), PersistentDataType.DOUBLE);
@@ -152,6 +155,7 @@ public class BukkitListener implements Listener {
 					Projectile proj = p.launchProjectile(arrowClass);
 					Utils.setProjectileSpeedFromMultiplier(e.getItem(), proj);
 					Utils.passBowFlags(e.getItem(), proj);
+					Utils.setLaunchedProjectileSpread(e.getItem(), p, proj);
 					setCanFire(cd, e.getPlayer());
 				}
 			}

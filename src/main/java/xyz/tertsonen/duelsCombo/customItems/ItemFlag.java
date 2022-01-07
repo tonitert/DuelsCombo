@@ -33,6 +33,9 @@ public class ItemFlag<T> {
 	 */
 	public static ItemFlag<Integer> TIME_BETWEEN_BOW_SHOTS = new ItemFlag<>("timeBetweenBowShots", "time-between-bow-shots", PersistentDataType.INTEGER, false);
 	public static ItemFlag<Double> PROJECTILE_VELOCITY_MULTIPLIER = new ItemFlag<>("projectileVelocityMultiplier", "projectile-velocity-multiplier", PersistentDataType.DOUBLE, false);
+	/**
+	 *	Size of the explosion which will be created when the projectile hits something.
+	 */
 	public static ItemFlag<Double> PROJECTILE_EXPLOSION_SIZE = new ItemFlag<>("arrowExplosionSize", "projectile-explosion-size", PersistentDataType.DOUBLE, true);
 	public static ItemFlag<Boolean> PROJECTILE_EXPLOSION_DESTROY_BLOCKS = new ItemFlag<>("projectileExplosionDestroyBlocks", "projectile-explosion-destroy-blocks", Bool.BOOL, true);
 

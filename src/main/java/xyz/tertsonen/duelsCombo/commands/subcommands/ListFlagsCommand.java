@@ -26,7 +26,7 @@ public class ListFlagsCommand extends Command {
                     TODO: showing the class name to the user is not a good long term solution for implementing types for flags,
                      a wrapper class for PersistentDataType could be better
                  */
-                DuelsCombo.getInstance().getLang().sendTo(sender, String.format(DuelsCombo.getInstance().getLang().getFlagFormat(), flag.getUserFriendlyName(), flag.getType().getPrimitiveType().getSimpleName().toLowerCase(Locale.ROOT)), false);
+                DuelsCombo.getInstance().getLang().sendTo(sender, String.format(DuelsCombo.getInstance().getLang().getFlagFormat(), flag.getUserFriendlyName(), flag.getType().getComplexType().getSimpleName().toLowerCase(Locale.ROOT)), false);
             }
             DuelsCombo.getInstance().getLang().sendTo(sender, DuelsCombo.getInstance().getLang().getFlagsFooter(), false);
         }

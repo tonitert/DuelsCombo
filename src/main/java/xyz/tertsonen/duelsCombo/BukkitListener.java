@@ -76,18 +76,15 @@ public class BukkitListener implements Listener {
 				new BukkitRunnable(){
 					@Override
 					public void run() {
-						Location l2 = hitEntity.getLocation();
-						Location oldHitEntityLoc = new Location(l2.getWorld(), l2.getX(), l2.getY(), l2.getZ());
-						Location l3 = shooter.getLocation();
-						Location shooterLoc = new Location(l3.getWorld(), l3.getX(), l3.getY(), l3.getZ());
-						hitEntity.teleport(shooterLoc);
+						Location oldHitEntityLoc = hitEntity.getLocation();
+						hitEntity.teleport(shooter.getLocation());
 						shooter.teleport(oldHitEntityLoc);
 					}
 				}.runTaskLater(DuelsCombo.getInstance(), 1L);
 			}
 		}
 
-		// PROJECTILE_PUSH_AMOUNT & SHOOTER_BOW_KNOCKBACK
+		// PROJECTILE_PUSH_AMOUNT
 		if(!(shooterSource instanceof Player)) return;
 		Double kb = e.getEntity().getPersistentDataContainer().get(ItemFlag.SHOOTER_BOW_KNOCKBACK.getNamespacedKey(), PersistentDataType.DOUBLE);
 		Double hitEntityPush = e.getEntity().getPersistentDataContainer().get(ItemFlag.PROJECTILE_PUSH_AMOUNT.getNamespacedKey(), PersistentDataType.DOUBLE);
@@ -104,6 +101,7 @@ public class BukkitListener implements Listener {
 			}
 		}
 
+		// SHOOTER_BOW_KNOCKBACK
 		if(kb != null && kb != 0){
 			Location projLoc = e.getEntity().getLocation();
 			players.put((Player) shooter, new LaunchData(projLoc, kb));
@@ -146,12 +144,7 @@ public class BukkitListener implements Listener {
 				Material arrow = Utils.takeFirstArrow(p, !(p.getGameMode() == GameMode.CREATIVE ||
 						e.getItem().getEnchantmentLevel(Enchantment.ARROW_INFINITE) != 0));
 				if(arrow != null){
-					Class<? extends AbstractArrow> arrowClass;
-					if (arrow == Material.SPECTRAL_ARROW) {
-						arrowClass = SpectralArrow.class;
-					} else {
-						arrowClass = Arrow.class;
-					}
+					Class<? extends AbstractArrow> arrowClass = arrow == Material.SPECTRAL_ARROW ? SpectralArrow.class : Arrow.class;
 					Projectile proj = p.launchProjectile(arrowClass);
 					Utils.setProjectileSpeedFromMultiplier(e.getItem(), proj);
 					Utils.passBowFlags(e.getItem(), proj);

@@ -1,6 +1,7 @@
 # DuelsCombo
 
-[![build](https://github.com/t0nero/DuelsCombo/actions/workflows/maven.yml/badge.svg)](https://github.com/t0nero/DuelsCombo/actions/workflows/maven.yml)
+[![build](https://github.com/t0nero/DuelsCombo/actions/workflows/maven.yml/badge.svg)](https://github.com/t0nero/DuelsCombo/actions/workflows/maven.yml) [![test](https://github.com/t0nero/DuelsCombo/actions/workflows/maven_tests.yml/badge.svg)](https://github.com/t0nero/DuelsCombo/actions/workflows/maven_tests.yml)
+
 
 Adds a combo duel to Realizedd's Duels plugin, and custom items such as autofire bows and grappling hook bows.
 

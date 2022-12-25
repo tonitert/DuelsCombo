@@ -148,4 +148,26 @@ public class Utils {
 			}
 		}
 	}
+
+	static void createExtraProjectiles(@NotNull ItemStack item, Entity projectile, Entity shooter) {
+		if(item.getItemMeta() == null) return;
+		Integer amount = ItemFlag.PROJECTILE_AMOUNT.getValue(item.getItemMeta());
+		if (amount == null || amount <= 1) return;
+		if(item.getItemMeta() == null) return;
+		Double mul = ItemFlag.PROJECTILE_LAUNCH_DIRECTION_RANDOMNESS_MULTIPLIER.getValue(item.getItemMeta());
+		if (mul == null) mul = 1d;
+		for (int integer = 1; integer < amount; integer++) {
+			Arrow newProjectile = shooter.getWorld().spawnArrow(projectile.getLocation(), shooter.getLocation().getDirection(), (float) projectile.getVelocity().length(), 12 * mul.floatValue());
+			Utils.setProjectileSpeedFromMultiplier(item, newProjectile);
+			Utils.passBowFlags(item, newProjectile);
+			Utils.setLaunchedProjectileSpread(item, shooter, newProjectile);
+		}
+	}
+
+	static void handleLaunchedProjectile(ItemStack item, Entity shooter, Entity projectile) {
+		createExtraProjectiles(item, projectile, shooter);
+		Utils.setProjectileSpeedFromMultiplier(item, projectile);
+		Utils.passBowFlags(item, projectile);
+		Utils.setLaunchedProjectileSpread(item, shooter, projectile);
+	}
 }

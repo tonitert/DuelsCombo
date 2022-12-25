@@ -49,6 +49,11 @@ public class ItemFlag<T> {
 	 */
 	public static ItemFlag<Double> PROJECTILE_LAUNCH_DIRECTION_RANDOMNESS_MULTIPLIER = new ItemFlag<>("projectileSpread", "projectile-direction-randomness-multiplier", PersistentDataType.DOUBLE, false);
 
+	/**
+	 * Amount of projectiles to create
+	 */
+	public static ItemFlag<Integer> PROJECTILE_AMOUNT = new ItemFlag<>("projectileAmount", "projectile-amount", PersistentDataType.INTEGER, false);
+
 	@Getter
 	private final String key;
 	@Getter
@@ -70,7 +75,8 @@ public class ItemFlag<T> {
 			PROJECTILE_VELOCITY_MULTIPLIER,
 			PROJECTILE_EXPLOSION_SIZE,
 			PROJECTILE_EXPLOSION_DESTROY_BLOCKS,
-			PROJECTILE_LAUNCH_DIRECTION_RANDOMNESS_MULTIPLIER
+			PROJECTILE_LAUNCH_DIRECTION_RANDOMNESS_MULTIPLIER,
+			PROJECTILE_AMOUNT
 	};
 
 	static {

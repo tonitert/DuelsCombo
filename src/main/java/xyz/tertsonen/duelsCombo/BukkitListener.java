@@ -51,14 +51,12 @@ public class BukkitListener implements Listener {
 	@EventHandler
 	private void onBowShoot(EntityShootBowEvent e){
 		if(e.getBow() == null) return;
-		Utils.setProjectileSpeedFromMultiplier(e.getBow(), e.getProjectile());
-		Utils.passBowFlags(e.getBow(), e.getProjectile());
+		Utils.handleLaunchedProjectile(e.getBow(),e.getEntity(),e.getProjectile());
 		if(e.getEntity() instanceof Player) {
 			Player player = (Player) e.getEntity();
 			if(player.getInventory().getItemInMainHand().getItemMeta() == null) return;
 			setCanFire(ItemFlag.TIME_BETWEEN_BOW_SHOTS.getValue(player.getInventory().getItemInMainHand().getItemMeta()), player);
 		}
-		Utils.setLaunchedProjectileSpread(e.getBow(), e.getEntity(), e.getProjectile());
 	}
 
 	@EventHandler
@@ -146,9 +144,7 @@ public class BukkitListener implements Listener {
 				if(arrow != null){
 					Class<? extends AbstractArrow> arrowClass = arrow == Material.SPECTRAL_ARROW ? SpectralArrow.class : Arrow.class;
 					Projectile proj = p.launchProjectile(arrowClass);
-					Utils.setProjectileSpeedFromMultiplier(e.getItem(), proj);
-					Utils.passBowFlags(e.getItem(), proj);
-					Utils.setLaunchedProjectileSpread(e.getItem(), p, proj);
+					Utils.handleLaunchedProjectile(e.getItem(), p, proj);
 					setCanFire(cd, e.getPlayer());
 				}
 			}

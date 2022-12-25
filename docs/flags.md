@@ -19,3 +19,4 @@ Flags can have different data types, which control what values can be set to the
 * **projectile-explosion-destroy-blocks**: Whether to make the projectile explosion destroy blocks. Data type: bool
 * **projectile-push-amount** Amount of pushing force to apply to the hit entity, when this item shoots a projectile. Data type: double
 * **projectile-direction-randomness-multiplier** Multiplier for the direction randomness Minecraft adds to bows by default. Data type: double
+* **projectile-amount** Amount of projectiles to shoot. Data type: integer

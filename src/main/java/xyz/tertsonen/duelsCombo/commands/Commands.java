@@ -57,8 +57,8 @@ public class Commands extends SubCommand {
     }
 
     private void sendUsage(CommandSender sender, String label, String[] args) {
-        lang.sendTo(sender, lang.getHelpHeader(), true);
-        subCommands.values().forEach(cmd -> lang.sendTo(sender, label + " " + args[0] + " " + cmd.getUsage() + "\n" + cmd.getDescription()+ "\n", false));
-        lang.sendTo(sender, lang.getHelpFooter(), true);
+        lang.sendTo(sender, lang.getHelpHeader(), false);
+        subCommands.values().forEach(cmd -> lang.sendTo(sender, "&f/" + label + " " + args[0] + " " + cmd.getUsage() + " &e-&7 " + cmd.getDescription() + "\n \n", false));
+        lang.sendTo(sender, lang.getHelpFooter(), false);
     }
 }

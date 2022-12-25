@@ -70,6 +70,9 @@ public class SetFlagCommand extends Command {
 			} else if(type.equals(PersistentDataType.INTEGER)){
 				Integer integer = Integer.parseInt(args[3]);
 				itemMeta.getPersistentDataContainer().set(flag.getNamespacedKey(), PersistentDataType.INTEGER, integer);
+			} else if(type.equals(PersistentDataType.STRING)){
+				String string = args[3];
+				itemMeta.getPersistentDataContainer().set(flag.getNamespacedKey(), PersistentDataType.STRING, string);
 			}
 		}
 		catch (NumberFormatException e){

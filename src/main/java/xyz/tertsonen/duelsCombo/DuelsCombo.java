@@ -27,6 +27,9 @@ public class DuelsCombo extends JavaPlugin {
     private boolean active = false;
     @Getter
     private ProtocolManager protocolManager;
+    @Getter
+    private TrailEntityUpdater trailEntityUpdater;
+
 
     @Override
     public void onEnable(){
@@ -44,6 +47,7 @@ public class DuelsCombo extends JavaPlugin {
         duelsAPI.registerSubCommand("duels", new Commands(this,duelsAPI));
         active = true;
         protocolManager = ProtocolLibrary.getProtocolManager();
+        trailEntityUpdater = new TrailEntityUpdater();
     }
     @Override
     public void onDisable(){

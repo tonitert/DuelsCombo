@@ -49,6 +49,12 @@ public class ItemFlag<T> {
 	 */
 	public static ItemFlag<Double> PROJECTILE_LAUNCH_DIRECTION_RANDOMNESS_MULTIPLIER = new ItemFlag<>("projectileSpread", "projectile-direction-randomness-multiplier", PersistentDataType.DOUBLE, false);
 
+	public static ItemFlag<String> PROJECTILE_TRAIL_PARTICLE = new ItemFlag<>("projectileTrail", "projectile-trail-particle", PersistentDataType.STRING, false);
+
+	public static ItemFlag<Double> TRAIL_PARTICLE_DISTANCE = new ItemFlag<>("projectileTrailDist", "projectile-trail-particle-distance", PersistentDataType.DOUBLE, false);
+
+	public static ItemFlag<Boolean> DISABLE_FALL_DAMAGE = new ItemFlag<>("disableFallDamage", "disable-fall-damage", Bool.BOOL, false);
+
 	@Getter
 	private final String key;
 	@Getter
@@ -70,7 +76,10 @@ public class ItemFlag<T> {
 			PROJECTILE_VELOCITY_MULTIPLIER,
 			PROJECTILE_EXPLOSION_SIZE,
 			PROJECTILE_EXPLOSION_DESTROY_BLOCKS,
-			PROJECTILE_LAUNCH_DIRECTION_RANDOMNESS_MULTIPLIER
+			PROJECTILE_LAUNCH_DIRECTION_RANDOMNESS_MULTIPLIER,
+			PROJECTILE_TRAIL_PARTICLE,
+			TRAIL_PARTICLE_DISTANCE,
+			DISABLE_FALL_DAMAGE
 	};
 
 	static {

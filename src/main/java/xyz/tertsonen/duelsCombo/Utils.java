@@ -6,6 +6,7 @@ import me.realized.duels.api.Duels;
 import me.realized.duels.api.kit.Kit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Particle;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -35,19 +36,19 @@ public class Utils {
 		}
 	}
 
-	private static @NotNull PacketContainer makeVelocityPacket(@NotNull Player player) {
-		Vector vel = player.getVelocity();
+	private static @NotNull PacketContainer makeVelocityPacket(@NotNull Entity entity) {
+		Vector vel = entity.getVelocity();
 		PacketContainer velPacket = new PacketContainer(PacketType.Play.Server.ENTITY_VELOCITY);
 		velPacket.getIntegers()
-				.write(0, player.getEntityId())
+				.write(0, entity.getEntityId())
 				.write(1, (int) (vel.getX() * 8000D))
 				.write(2, (int) (vel.getY() * 8000D))
 				.write(3, (int) (vel.getZ() * 8000D));
 		return velPacket;
 	}
 
-	static void sendVelocityPacket(Player player) {
-		PacketContainer velPacket = makeVelocityPacket(player);
+	static void sendVelocityPacket(Player player, Entity toMake) {
+		PacketContainer velPacket = makeVelocityPacket(toMake);
 		try{
 			DuelsCombo.getInstance().getProtocolManager().sendServerPacket(player, velPacket);
 		} catch (InvocationTargetException e) {
@@ -111,8 +112,20 @@ public class Utils {
 	}
 
 	@SuppressWarnings("unchecked")
-	static <T> void passBowFlags(@NotNull ItemStack bow, Entity firedProjectile){
+	static <T> void doBowLaunch(@NotNull ItemStack bow, Entity firedProjectile){
 		if(bow.getItemMeta() == null) return;
+		String val = ItemFlag.PROJECTILE_TRAIL_PARTICLE.getValue(bow.getItemMeta());
+		if(val != null && !val.equals("none")){
+			try{
+				Particle particle = Particle.valueOf(val);
+				Double dist = ItemFlag.TRAIL_PARTICLE_DISTANCE.getValue(bow.getItemMeta());
+				DuelsCombo.getInstance().getTrailEntityUpdater().addEntity(new TrailEntity(firedProjectile, particle, firedProjectile.getLocation(), dist == null ? 0.25d : dist));
+			}
+			catch(IllegalArgumentException ignored){
+				// ignored
+			}
+		}
+
 		ItemMeta meta = bow.getItemMeta();
 		PersistentDataContainer cont = meta.getPersistentDataContainer();
 		PersistentDataContainer entityCont = firedProjectile.getPersistentDataContainer();

@@ -33,7 +33,7 @@ public class ItemFlag<T> {
 	/**
 	 * Whether to make the bow shoot instantly, like in Beta 1.8.
 	 */
-	public static ItemFlag<Boolean> BOW_INSTANT_SHOOT = new ItemFlag<>("bowInstantShoot", "bow-instant-shoot", Bool.BOOL, false);
+	public static ItemFlag<Boolean> BOW_INSTANT_SHOOT = new ItemFlag<>("bowInstantShoot", "bow-instant-shoot", Bool.BOOL, true);
 	/**
 	 * Cooldown between bow shots.
 	 */
@@ -44,6 +44,14 @@ public class ItemFlag<T> {
 	 */
 	public static ItemFlag<Double> PROJECTILE_EXPLOSION_SIZE = new ItemFlag<>("arrowExplosionSize", "projectile-explosion-size", PersistentDataType.DOUBLE, true);
 	public static ItemFlag<Boolean> PROJECTILE_EXPLOSION_DESTROY_BLOCKS = new ItemFlag<>("projectileExplosionDestroyBlocks", "projectile-explosion-destroy-blocks", Bool.BOOL, true);
+
+	/**
+	 * Create a custom explosion that only applies knockback.
+	 */
+	public static ItemFlag<Boolean> PROJECTILE_KNOCKBACK_EXPLOSION = new ItemFlag<>("projectileKnockbackExplosion", "projectile-knockback-explosion", Bool.BOOL, true);
+	public static ItemFlag<Boolean> PROJECTILE_KNOCKBACK_EXPLOSION_SHOW_EFFECT = new ItemFlag<>("projectileShowExplosion", "projectile-knockback-explosion-show-effect", Bool.BOOL, true);
+	public static ItemFlag<Double> PROJECTILE_CUSTOM_EXPLOSION_KNOCKBACK_RANGE = new ItemFlag<>("projectileExplosionKnockbackRange", "projectile-explosion-knockback-range", PersistentDataType.DOUBLE, true);
+
 	/**
 	 * Multiplier for the amount of randomness the server adds to bows by default.
 	 */
@@ -76,7 +84,9 @@ public class ItemFlag<T> {
 			PROJECTILE_EXPLOSION_SIZE,
 			PROJECTILE_EXPLOSION_DESTROY_BLOCKS,
 			PROJECTILE_LAUNCH_DIRECTION_RANDOMNESS_MULTIPLIER,
-			PROJECTILE_AMOUNT
+			PROJECTILE_AMOUNT,
+			PROJECTILE_KNOCKBACK_EXPLOSION,
+			PROJECTILE_CUSTOM_EXPLOSION_KNOCKBACK_RANGE
 	};
 
 	static {

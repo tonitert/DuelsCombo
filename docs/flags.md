@@ -20,3 +20,6 @@ Flags can have different data types, which control what values can be set to the
 * **projectile-push-amount** Amount of pushing force to apply to the hit entity, when this item shoots a projectile. Data type: double
 * **projectile-direction-randomness-multiplier** Multiplier for the direction randomness Minecraft adds to bows by default. Data type: double
 * **projectile-amount** Amount of projectiles to shoot. Data type: integer
+* **projectile-knockback-explosion** Create a custom explosion on projectile hit that only does knockback.
+* **projectile-knockback-explosion-show-effect** Whether to show the explosion particle effect with the custom explosion.
+* **projectile-explosion-knockback-range** The range from where the knockback explosion will affect entities.

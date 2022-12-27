@@ -120,11 +120,7 @@ public class BukkitListener implements Listener {
 				}
 			}.runTaskLater(DuelsCombo.getInstance(), /* 30 seconds */30 * 20L);
 		}
-		Double explosionSize = ItemFlag.PROJECTILE_EXPLOSION_SIZE.getValue(e.getEntity());
-		if(explosionSize != null && explosionSize != 0d){
-			boolean breakBlocks = Boolean.TRUE.equals(ItemFlag.PROJECTILE_EXPLOSION_DESTROY_BLOCKS.getValue(e.getEntity()));
-			e.getEntity().getWorld().createExplosion(e.getEntity().getLocation(), (float) (double) explosionSize, false, breakBlocks);
-		}
+		Utils.doProjectileExplosion(e);
 	}
 
 	@EventHandler

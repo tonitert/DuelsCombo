@@ -4,42 +4,50 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import me.realized.duels.api.Duels;
 import me.realized.duels.api.kit.Kit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import xyz.tertsonen.duelsCombo.customItems.ItemFlag;
 import xyz.tertsonen.duelsCombo.saveData.KitData;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
 public class Utils {
 
-	static void sendVelocityPacket(Player player, Player player2) {
-		PacketContainer velPacket = makeVelocityPacket(player);
+	static void sendVelocityPacket(Entity entity, Player... players) {
+		PacketContainer velPacket = makeVelocityPacket(entity);
 		try{
-			DuelsCombo.getInstance().getProtocolManager().sendServerPacket(player, velPacket);
-			DuelsCombo.getInstance().getProtocolManager().sendServerPacket(player2, velPacket);
+			if (entity instanceof Player)
+				DuelsCombo.getInstance().getProtocolManager().sendServerPacket((Player) entity, velPacket);
+			for (Player playerToSend : players) {
+				DuelsCombo.getInstance().getProtocolManager().sendServerPacket(playerToSend, velPacket);
+			}
 		} catch (InvocationTargetException e) {
 			DuelsCombo.getInstance().getLogger().warning("Could not send velocity packet");
 		}
 	}
 
-	private static @NotNull PacketContainer makeVelocityPacket(@NotNull Player player) {
-		Vector vel = player.getVelocity();
+	private static @NotNull PacketContainer makeVelocityPacket(@NotNull Entity entity) {
+		Vector vel = entity.getVelocity();
 		PacketContainer velPacket = new PacketContainer(PacketType.Play.Server.ENTITY_VELOCITY);
 		velPacket.getIntegers()
-				.write(0, player.getEntityId())
+				.write(0, entity.getEntityId())
 				.write(1, (int) (vel.getX() * 8000D))
 				.write(2, (int) (vel.getY() * 8000D))
 				.write(3, (int) (vel.getZ() * 8000D));
@@ -128,11 +136,13 @@ public class Utils {
 		}
 	}
 
-	static void setProjectileSpeedFromMultiplier(@NotNull ItemStack item, @NotNull Entity projectile){
+	static void setProjectileSpeedFromMultiplier(@NotNull ItemStack item, @NotNull Entity projectile, Entity shooter){
 		if(item.getItemMeta() == null) return;
 		Double mul = ItemFlag.PROJECTILE_VELOCITY_MULTIPLIER.getValue(item.getItemMeta());
 		mul = mul == null ? 1d : mul;
 		projectile.setVelocity(projectile.getVelocity().multiply(mul));
+		if(shooter instanceof Player)
+			Utils.sendVelocityPacket(projectile, (Player) shooter);
 	}
 
 	static void setLaunchedProjectileSpread(ItemStack item, Entity shooter, Entity projectile){
@@ -158,7 +168,7 @@ public class Utils {
 		if (mul == null) mul = 1d;
 		for (int integer = 1; integer < amount; integer++) {
 			Arrow newProjectile = shooter.getWorld().spawnArrow(projectile.getLocation(), shooter.getLocation().getDirection(), (float) projectile.getVelocity().length(), 12 * mul.floatValue());
-			Utils.setProjectileSpeedFromMultiplier(item, newProjectile);
+			Utils.setProjectileSpeedFromMultiplier(item, newProjectile, shooter);
 			Utils.passBowFlags(item, newProjectile);
 			Utils.setLaunchedProjectileSpread(item, shooter, newProjectile);
 		}
@@ -166,8 +176,57 @@ public class Utils {
 
 	static void handleLaunchedProjectile(ItemStack item, Entity shooter, Entity projectile) {
 		createExtraProjectiles(item, projectile, shooter);
-		Utils.setProjectileSpeedFromMultiplier(item, projectile);
+		Utils.setProjectileSpeedFromMultiplier(item, projectile, shooter);
+
 		Utils.passBowFlags(item, projectile);
 		Utils.setLaunchedProjectileSpread(item, shooter, projectile);
+	}
+
+	static void doProjectileExplosion(@NotNull ProjectileHitEvent e) {
+		Double explosionSize = ItemFlag.PROJECTILE_EXPLOSION_SIZE.getValue(e.getEntity());
+		boolean custom = Boolean.TRUE.equals(ItemFlag.PROJECTILE_KNOCKBACK_EXPLOSION.getValue(e.getEntity()));
+		if (!custom){
+			if (explosionSize == null || explosionSize == 0d) return;
+			boolean breakBlocks = Boolean.TRUE.equals(ItemFlag.PROJECTILE_EXPLOSION_DESTROY_BLOCKS.getValue(e.getEntity()));
+			e.getEntity().getWorld().createExplosion(e.getEntity().getLocation(), (float) (double) explosionSize, false, breakBlocks);
+			return;
+		}
+
+		// Custom explosion
+
+		Double explosionRange = ItemFlag.PROJECTILE_CUSTOM_EXPLOSION_KNOCKBACK_RANGE.getValue(e.getEntity());
+		explosionRange = explosionRange == null ? 10d : explosionRange;
+		explosionSize = explosionSize == null ? 1d : explosionSize;
+		List<Entity> entities = e.getEntity().getNearbyEntities(explosionRange, explosionRange, explosionRange);
+		ArrayList<Player> playersToSend = new ArrayList<>(entities.size() + 1);
+		if(e.getEntity().getShooter() instanceof Player)
+			playersToSend.add((Player) e.getEntity().getShooter());
+		List<Entity> launchedEntities = new ArrayList<>(entities.size());
+		Location hitLoc = null;
+		if (e.getHitBlock() != null) hitLoc = e.getHitBlock().getLocation();
+		if (hitLoc == null && e.getHitEntity() != null) hitLoc = e.getHitEntity().getLocation();
+		if(hitLoc == null) hitLoc = e.getEntity().getLocation();
+
+		Boolean showEffect = ItemFlag.PROJECTILE_KNOCKBACK_EXPLOSION_SHOW_EFFECT.getValue(e.getEntity());
+		if(showEffect == null || showEffect){
+			e.getEntity().getWorld().createExplosion(hitLoc, 0, false, false);
+		}
+
+
+		for (Entity entity : entities) {
+			Vector vec = entity.getLocation().subtract(hitLoc).toVector();
+			double len = vec.length();
+			if (len > explosionRange) continue;
+			vec.normalize().multiply(0.1d / (len / explosionRange) * explosionSize).add(new Vector(0d,0.3d,0d));
+			if(!NumberConversions.isFinite(vec.getX()) || !NumberConversions.isFinite(vec.getY()) || !NumberConversions.isFinite(vec.getZ())) continue;
+			entity.setVelocity(entity.getVelocity().add(vec));
+			launchedEntities.add(entity);
+			if(entity instanceof Player) playersToSend.add((Player) entity);
+		}
+		Player[] playersToSendArr = playersToSend.toArray(new Player[0]);
+		for (Entity launchedEntity : launchedEntities) {
+			Utils.sendVelocityPacket(launchedEntity, playersToSendArr);
+		}
+
 	}
 }

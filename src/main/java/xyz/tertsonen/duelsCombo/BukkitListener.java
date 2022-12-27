@@ -7,6 +7,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
@@ -57,6 +58,13 @@ public class BukkitListener implements Listener {
 			if(player.getInventory().getItemInMainHand().getItemMeta() == null) return;
 			setCanFire(ItemFlag.TIME_BETWEEN_BOW_SHOTS.getValue(player.getInventory().getItemInMainHand().getItemMeta()), player);
 		}
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	private void checkIfHitSelf(ProjectileHitEvent e){
+		if(!Boolean.TRUE.equals(ItemFlag.BOW_INSTANT_SHOOT.getValue(e.getEntity()))) return;
+		if(e.getHitEntity() != e.getEntity().getShooter()) return;
+		e.setCancelled(true);
 	}
 
 	@EventHandler
